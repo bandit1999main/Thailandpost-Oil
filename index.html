@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="แฟ้มสะสมผลงาน (Portfolio) ของ Bandit - Full-Stack Developer & Software Engineer ผู้ออกแบบเว็บไซต์ระดับ Premium" />
+    <title>Bandit | Premium Portfolio</title>
+  </head>
+  <body>
+    <!-- Background elements -->
+    <div class="bg-grid" id="bgGrid"></div>
+    <div class="glow-orb-1" id="orb1"></div>
+    <div class="glow-orb-2" id="orb2"></div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Header navigation -->
+    <header>
+      <div class="nav-container">
+        <a href="#home" class="logo-container" id="logoLink">
+          BANDIT<span class="logo-dot"></span>
+        </a>
+        <nav>
+          <ul id="navList">
+            <li><a href="#home" class="nav-link active" data-section="home" id="navHome">Home</a></li>
+            <li><a href="#about" class="nav-link" data-section="about" id="navAbout">About</a></li>
+            <li><a href="#projects" class="nav-link" data-section="projects" id="navProjects">Projects</a></li>
+            <li><a href="#contact" class="nav-link" data-section="contact" id="navContact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main id="app">
+      
+      <!-- 1. HOME SECTION -->
+      <section id="home" class="active">
+        <div class="hero-wrapper">
+          <div class="hero-content">
+            <h3>Welcome to my universe</h3>
+            <h1>Hi, I'm <span class="glow-text">Bandit</span></h1>
+            <h2 id="typingText" style="font-family: var(--font-title); font-size: 1.8rem; font-weight: 600; color: var(--text-primary); min-height: 2.5rem; margin-bottom: 1.5rem;"></h2>
+            <p>
+              I am a passionate developer focused on crafting beautiful, high-performance, and immersive web experiences. I specialize in turning complex logic into sleek, intuitive, and interactive interfaces.
+            </p>
+            <div class="hero-actions">
+              <a href="#projects" class="btn btn-primary" id="heroBtnProjects">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                View Projects
+              </a>
+              <a href="#contact" class="btn btn-secondary" id="heroBtnContact">Get in touch</a>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="avatar-wrapper game-wrapper">
+              <div class="avatar-inner game-inner">
+                <canvas id="gameCanvas"></canvas>
+                <div class="game-instructions" id="gameInstructions">
+                  <span>🎮 WASD / Arrows or Click to Move</span>
+                </div>
+              </div>
+              <div class="floating-badge badge-1">
+                <span class="logo-dot"></span> Full-Stack
+              </div>
+              <div class="floating-badge badge-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                UX Engineer
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. ABOUT SECTION -->
+      <section id="about">
+        <div class="section-header">
+          <p class="section-subtitle">Discover</p>
+          <h2>About Me</h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-bio glass-panel" id="aboutBioPanel">
+            <h3>Who is Bandit?</h3>
+            <p>
+              I am a digital artisan who loves building high-performance web applications. My coding journey revolves around creating beautiful, user-centered software designs backed by secure, optimized backend logic.
+            </p>
+            <p>
+              I believe that premium products lie at the intersection of stunning design and stellar performance. I'm constantly learning new web patterns and leveraging cutting-edge web platform capabilities to build next-generation applications.
+            </p>
+          </div>
+          <div class="skills-wrapper">
+            <div class="skills-category glass-panel">
+              <h4>Frontend Core</h4>
+              <div class="skills-grid">
+                <div class="skill-tag">HTML5 & CSS3</div>
+                <div class="skill-tag">JavaScript (ES6+)</div>
+                <div class="skill-tag">React.js</div>
+                <div class="skill-tag">Next.js</div>
+                <div class="skill-tag">Vite & Bundlers</div>
+                <div class="skill-tag">D3.js Visualization</div>
+              </div>
+            </div>
+            <div class="skills-category glass-panel">
+              <h4>Backend & Database</h4>
+              <div class="skills-grid">
+                <div class="skill-tag">Node.js</div>
+                <div class="skill-tag">Express & APIs</div>
+                <div class="skill-tag">GraphQL</div>
+                <div class="skill-tag">MongoDB & PostgreSQL</div>
+                <div class="skill-tag">Redis Cache</div>
+                <div class="skill-tag">Go Language</div>
+              </div>
+            </div>
+            <div class="skills-category glass-panel">
+              <h4>DevOps & Tools</h4>
+              <div class="skills-grid">
+                <div class="skill-tag">Git & GitHub</div>
+                <div class="skill-tag">Docker</div>
+                <div class="skill-tag">Firebase & Cloud</div>
+                <div class="skill-tag">Vercel & Netlify</div>
+                <div class="skill-tag">Linux Systems</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. PROJECTS SECTION -->
+      <section id="projects">
+        <div class="section-header">
+          <p class="section-subtitle">Showcase</p>
+          <h2>My Creative Works</h2>
+        </div>
+        <div class="projects-grid" id="projectsGrid">
+          <!-- Dynamically generated project cards via main.js -->
+        </div>
+      </section>
+
+      <!-- 4. CONTACT SECTION -->
+      <section id="contact">
+        <div class="section-header">
+          <p class="section-subtitle">Get in touch</p>
+          <h2>Let's Collaborate</h2>
+        </div>
+        <div class="contact-container">
+          <div class="contact-info">
+            <div class="contact-card glass-panel">
+              <h3>Contact Details</h3>
+              
+              <div class="contact-method">
+                <div class="contact-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </div>
+                <div class="contact-details">
+                  <h4>Email</h4>
+                  <p id="contactEmailText">bandit1999main@gmail.com</p>
+                </div>
+              </div>
+
+              <div class="contact-method">
+                <div class="contact-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <div class="contact-details">
+                  <h4>Location</h4>
+                  <p>Bangkok, Thailand</p>
+                </div>
+              </div>
+
+              <div class="social-links">
+                <a href="https://github.com/bandit1999main" target="_blank" class="social-btn" id="githubLink" aria-label="GitHub">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                </a>
+                <a href="https://linkedin.com" target="_blank" class="social-btn" id="linkedinLink" aria-label="LinkedIn">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="contact-form-card glass-panel">
+            <form class="contact-form" id="contactForm">
+              <div class="form-group">
+                <label for="formName">Your Name</label>
+                <input type="text" id="formName" class="form-input" placeholder="John Doe" required />
+              </div>
+              <div class="form-group">
+                <label for="formEmail">Your Email</label>
+                <input type="email" id="formEmail" class="form-input" placeholder="john@example.com" required />
+              </div>
+              <div class="form-group">
+                <label for="formMessage">Your Message</label>
+                <textarea id="formMessage" class="form-input" placeholder="Tell me about your project..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" id="btnSubmitContact">
+                Send Message
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. ADMIN SECTION -->
+      <section id="admin">
+        <div class="section-header">
+          <p class="section-subtitle">Developer Dashboard</p>
+          <h2>Console Admin</h2>
+        </div>
+        
+        <!-- A. Login Panel -->
+        <div class="admin-login-container" id="adminLoginContainer">
+          <div class="contact-form-card glass-panel" style="max-width: 450px; margin: 0 auto;">
+            <h3 style="margin-bottom: 1.5rem; text-align: center;" class="glow-text">Authorized Access</h3>
+            <form class="contact-form" id="adminLoginForm">
+              <div class="form-group">
+                <label for="adminEmail">Email Address</label>
+                <input type="email" id="adminEmail" class="form-input" placeholder="admin@example.com" required />
+              </div>
+              <div class="form-group">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" class="form-input" placeholder="••••••••" required />
+              </div>
+              <button type="submit" class="btn btn-primary" id="btnAdminLogin" style="width: 100%; margin-top: 1rem;">
+                Log In
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </button>
+              <p id="adminLoginError" style="color: #ef4444; font-size: 0.85rem; text-align: center; margin-top: 1rem; display: none;"></p>
+            </form>
+          </div>
+        </div>
+
+        <!-- B. Dashboard Manager Panel (Hidden initially) -->
+        <div class="admin-dashboard-container" id="adminDashboardContainer" style="display: none;">
+          <div class="admin-top-actions glass-panel" style="padding: 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">Logged in as:</p>
+              <h4 id="adminEmailBadge" class="glow-text" style="font-size: 1.05rem;">bandit1999main@gmail.com</h4>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+              <button class="btn btn-primary" id="btnOpenAddForm">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Add New Project
+              </button>
+              <button class="btn btn-secondary" id="btnAdminLogout">Log Out</button>
+            </div>
+          </div>
+
+          <!-- Project Form Panel (Hidden initially) -->
+          <div class="project-form-panel glass-panel" id="projectFormPanel" style="display: none; padding: 2rem; margin-bottom: 2rem;">
+            <h3 id="formPanelTitle" style="margin-bottom: 1.5rem;" class="glow-text">Add New Project</h3>
+            <form id="projectEditorForm" class="contact-form">
+              <input type="hidden" id="editProjectId" />
+              <input type="hidden" id="editProjectDocId" />
+              <div class="grid-2-cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="form-group">
+                  <label for="projectTitle">Project Title</label>
+                  <input type="text" id="projectTitle" class="form-input" placeholder="Nova Commerce" required />
+                </div>
+                <div class="form-group">
+                  <label for="projectCategory">Category</label>
+                  <input type="text" id="projectCategory" class="form-input" placeholder="Full-Stack" required />
+                </div>
+              </div>
+              <div class="grid-2-cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="form-group">
+                  <label for="projectDemo">Demo Link (URL)</label>
+                  <input type="url" id="projectDemo" class="form-input" placeholder="https://example.com" />
+                </div>
+                <div class="form-group">
+                  <label for="projectGithub">GitHub Link (URL)</label>
+                  <input type="url" id="projectGithub" class="form-input" placeholder="https://github.com" />
+                </div>
+              </div>
+              <div class="grid-2-cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="form-group">
+                  <label for="projectTags">Tags (Comma-separated)</label>
+                  <input type="text" id="projectTags" class="form-input" placeholder="React, Node.js, GraphQL" required />
+                </div>
+                <div class="form-group">
+                  <label for="projectImageClass">Gradient Theme (Background)</label>
+                  <select id="projectImageClass" class="form-input" style="background-color: var(--bg-dark); cursor: pointer;">
+                    <option value="nova-bg">Nova (Deep Purple-Indigo)</option>
+                    <option value="aether-bg">Aether (Dark Blue-Cyan)</option>
+                    <option value="quantum-bg">Quantum (Midnight Blue-Slate)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="projectShortDesc">Short Card Description</label>
+                <input type="text" id="projectShortDesc" class="form-input" placeholder="A high-performance headless E-Commerce platform..." required />
+              </div>
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="projectDesc">Detailed Description (Popup Modal)</label>
+                <textarea id="projectDesc" class="form-input" placeholder="Tell visitors about this project's architecture, tools used, performance highlights, etc..." required></textarea>
+              </div>
+              <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button type="button" class="btn btn-secondary" id="btnCancelForm">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="btnSaveProject">Save Project</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Project Management List -->
+          <div class="admin-project-list glass-panel" style="padding: 2rem;">
+            <h3 style="margin-bottom: 1.5rem;">Manage Portfolio Works</h3>
+            <div id="adminProjectListContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+              <!-- Dynamic Rows inserted here via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Project Detail Modal -->
+    <div class="modal-overlay" id="projectModal">
+      <div class="modal-content glass-panel">
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div class="modal-hero" id="modalHero">
+          <!-- Abstract SVG Graphic is loaded here -->
+        </div>
+        <div class="modal-body">
+          <div class="modal-header-info">
+            <div>
+              <span class="modal-category" id="modalCategory">Category</span>
+              <h3 class="modal-title" id="modalTitle">Project Title</h3>
+            </div>
+            <div class="modal-links">
+              <a href="#" target="_blank" class="social-btn" id="modalGithubLink" aria-label="GitHub">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+              </a>
+              <a href="#" target="_blank" class="social-btn" id="modalDemoLink" aria-label="Live Demo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              </a>
+            </div>
+          </div>
+          <p class="modal-description" id="modalDescription">Detailed project description goes here.</p>
+          <div class="modal-tech">
+            <h4>Technologies Used</h4>
+            <div class="project-tags" id="modalTags">
+              <!-- Tags rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Toast Alert -->
+    <div class="success-toast glass-panel" id="successToast">
+      <div class="toast-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <div>
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.2rem; color: var(--text-primary);">Message Sent!</h4>
+        <p style="font-size: 0.8rem; color: var(--text-secondary);">Thank you. I'll get back to you soon.</p>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 Bandit. Crafted with passion, Vite & Glassmorphism. | <a href="#admin" style="color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.8rem; transition: color var(--transition-fast);" onmouseover="this.style.color='var(--accent-teal)'" onmouseout="this.style.color='var(--text-muted)'">Admin Console</a></p>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
