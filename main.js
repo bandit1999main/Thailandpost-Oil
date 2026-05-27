@@ -202,9 +202,11 @@ function toggleTheme() {
 }
 
 /* --- TAB / FORM MODE SWITCHING --- */
-function switchFormMode(mode) {
+function switchFormMode(mode, keepEditState = false) {
   formModeInput.value = mode;
-  cancelEdit(); // clear outputs
+  if (!keepEditState) {
+    cancelEdit(); // clear outputs
+  }
   
   if (mode === 'standard') {
     tabStandard.classList.add('active');
@@ -529,7 +531,8 @@ function handleFormSubmit(e) {
     document.getElementById('editIndex').value = '';
     saveBtn.innerHTML = '📥 บันทึกข้อมูลพนักงาน';
     resetBtn.classList.add('hidden');
-    document.getElementById('formTitle').textContent = 'กรอกข้อมูลผู้รับเงินค่าน้ำมัน';
+    const formTitle = document.getElementById('formTitle');
+    if (formTitle) formTitle.textContent = 'กรอกข้อมูลผู้รับเงินค่าน้ำมัน';
   } else {
     employees.push(item);
   }
@@ -590,7 +593,7 @@ function renderEmployeeTable() {
       <td>${index + 1}</td>
       <td><strong>${item.name}</strong></td>
       <td><span class="badge position-${item.position.replace(/[\s\(\)\.]/g, '')}">${item.position}</span></td>
-      <td style="font-size: 0.85rem; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${routeDesc}">${routeDesc}</td>
+      <td style="font-size: 0.85rem; max-width: 220px; white-space: normal; word-break: break-word;" title="${routeDesc}">${routeDesc}</td>
       <td>${liters.toLocaleString(undefined, { minimumFractionDigits: 2 })} ลิตร</td>
       <td>${fuelCost.toLocaleString(undefined, { minimumFractionDigits: 2 })} ฿</td>
       <td>${maintCost.toLocaleString(undefined, { minimumFractionDigits: 2 })} ฿</td>
@@ -622,8 +625,8 @@ function recalculateTableCosts() {
 function loadRowToForm(index) {
   const item = employees[index];
   
-  // Switch tab depending on mode
-  switchFormMode(item.formMode || 'standard');
+  // Switch tab depending on mode without clearing index
+  switchFormMode(item.formMode || 'standard', true);
 
   document.getElementById('empName').value = item.name;
   vehicleTypeSelect.value = item.vehicle;
@@ -633,7 +636,8 @@ function loadRowToForm(index) {
 
   saveBtn.innerHTML = '✔️ อัปเดตข้อมูลพนักงาน';
   resetBtn.classList.remove('hidden');
-  document.getElementById('formTitle').textContent = 'แก้ไขข้อมูลพนักงาน ลำดับที่ ' + (index + 1);
+  const formTitle = document.getElementById('formTitle');
+  if (formTitle) formTitle.textContent = 'แก้ไขข้อมูลพนักงาน ลำดับที่ ' + (index + 1);
 
   if (item.formMode === 'supervisor') {
     tempMissions = [...item.missions];
@@ -670,7 +674,8 @@ function cancelEdit() {
   document.getElementById('editIndex').value = '';
   saveBtn.innerHTML = '📥 บันทึกข้อมูลพนักงาน';
   resetBtn.classList.add('hidden');
-  document.getElementById('formTitle').textContent = 'กรอกข้อมูลผู้รับเงินค่าน้ำมัน';
+  const formTitle = document.getElementById('formTitle');
+  if (formTitle) formTitle.textContent = 'กรอกข้อมูลผู้รับเงินค่าน้ำมัน';
   employeeForm.reset();
   routeStatsPreview.classList.add('hidden');
   tempMissions = [];

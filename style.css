@@ -70,9 +70,12 @@ body {
 .blur-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(120px);
+  filter: blur(80px);
   opacity: 0.35;
   transition: all var(--transition-normal);
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 .orb-red {
@@ -931,7 +934,9 @@ tr:hover td {
 #employeeTable th:nth-child(4),
 #employeeTable td:nth-child(4) {
   min-width: 130px !important;
-  max-width: 180px !important;
+  max-width: 220px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
 }
 
 #employeeTable td {
