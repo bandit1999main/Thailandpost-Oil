@@ -4,600 +4,484 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="แฟ้มสะสมผลงาน (Portfolio) ของ Bandit - Full-Stack Developer & Software Engineer ผู้ออกแบบเว็บไซต์ระดับ Premium" />
-    <title>Bandit | Premium Portfolio</title>
+    <meta name="description" content="ระบบคำนวณค่าน้ำมันและค่าบำรุงรักษาไปรษณีย์ไทย คำนวณราคาน้ำมันถัวเฉลี่ยถ่วงน้ำหนักตามระเบียบใหม่ล่าสุด" />
+    <title>ระบบคำนวณค่าน้ำมัน & ค่าบำรุงรักษา | ไปรษณีย์ไทย</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Background elements -->
-    <div class="bg-grid" id="bgGrid"></div>
-    <div class="glow-orb-1" id="orb1"></div>
-    <div class="glow-orb-2" id="orb2"></div>
-    <div class="cursor-glow" id="cursorGlow"></div>
+    <!-- Background Gradient and Blur Orbs -->
+    <div class="bg-blur-container">
+      <div class="blur-orb orb-red"></div>
+      <div class="blur-orb orb-orange"></div>
+      <div class="blur-orb orb-blue"></div>
+    </div>
 
-    <!-- Header navigation -->
-    <header>
-      <div class="nav-container">
-        <a href="#home" class="logo-container" id="logoLink">
-          BANDIT<span class="logo-dot"></span>
-        </a>
-        <nav>
-          <ul id="navList">
-            <li><a href="#home" class="nav-link active" data-section="home" id="navHome">Home</a></li>
-            <li><a href="#projects" class="nav-link" data-section="projects" id="navProjects">Projects</a></li>
-            <li><a href="#about" class="nav-link" data-section="about" id="navAbout">About</a></li>
-            <li><a href="#contact" class="nav-link" data-section="contact" id="navContact">Contact</a></li>
-          </ul>
-        </nav>
-        <div class="header-actions" style="display: flex; align-items: center; gap: 1rem;">
-          <button class="btn btn-secondary login-nav-btn" id="btnHeaderLogin" style="padding: 0.5rem 1.2rem; font-size: 0.9rem; margin-left: 1rem;">Sign In</button>
-          <div class="user-profile-badge glass-panel" id="userProfileBadge" style="display: none; margin-left: 1rem;">
-            <div class="user-avatar" id="userAvatar">U</div>
-            <div class="user-status-dot"></div>
-            <div class="user-dropdown-menu glass-panel" id="userDropdownMenu">
-              <p class="dropdown-user-email" id="dropdownUserEmail">user@example.com</p>
-              <div class="dropdown-divider"></div>
-              <a href="#projects" class="dropdown-item" id="menuFavorites">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem; color: #ef4444;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                My Favorites
-              </a>
-              <a href="#admin" class="dropdown-item" id="menuAdminConsole" style="display: none;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem; color: var(--accent-teal);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
-                Admin Console
-              </a>
-              <button class="dropdown-item btn-logout" id="menuLogout" style="width: 100%; border: none; background: transparent; text-align: left; cursor: pointer; color: var(--text-primary); display: flex; align-items: center; padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.9rem; transition: background var(--transition-fast);">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem; color: var(--text-muted);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                Log Out
-              </button>
-            </div>
+    <!-- Header -->
+    <header class="glass-header">
+      <div class="header-container">
+        <div class="brand">
+          <div class="brand-logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L2 22M22 2H8M22 2v14M2 22h14M2 22V8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
+          <div class="brand-text">
+            <h1>ไปรษณีย์ไทย</h1>
+            <p>Thailand Post Fuel Engine v2.5</p>
+          </div>
+        </div>
+        <div class="header-controls">
+          <button id="themeToggleBtn" class="btn btn-icon" aria-label="Toggle Dark/Light Mode">
+            <svg id="sunIcon" class="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg id="moonIcon" class="theme-icon hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
         </div>
       </div>
     </header>
 
     <!-- Main Container -->
-    <main id="app">
-      
-      <!-- 1. HOME SECTION -->
-      <section id="home" class="active">
-        <div class="hero-wrapper">
-          <div class="hero-content">
-            <h3>Welcome to my universe</h3>
-            <h1>Hi, I'm <span class="glow-text">Bandit</span></h1>
-            <h2 id="typingText" style="font-family: var(--font-title); font-size: 1.8rem; font-weight: 600; color: var(--text-primary); min-height: 2.5rem; margin-bottom: 1.5rem;"></h2>
-            <p>
-              I am a passionate developer focused on crafting beautiful, high-performance, and immersive web experiences. I specialize in turning complex logic into sleek, intuitive, and interactive interfaces.
-            </p>
-            <div class="hero-actions">
-              <a href="#projects" class="btn btn-primary" id="heroBtnProjects">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                View Projects
-              </a>
-              <a href="#contact" class="btn btn-secondary" id="heroBtnContact">Get in touch</a>
-            </div>
-          </div>
-          <div class="hero-visual">
-            <div class="avatar-wrapper game-wrapper">
-              <div class="avatar-inner game-inner">
-                <canvas id="gameCanvas"></canvas>
-                <div class="game-instructions" id="gameInstructions">
-                  <span>🎮 WASD / Arrows or Click to Move</span>
-                </div>
-              </div>
-              <div class="floating-badge badge-1">
-                <span class="logo-dot"></span> Full-Stack
-              </div>
-              <div class="floating-badge badge-2">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                UX Engineer
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <main class="main-content-area">
+      <!-- Welcome Header -->
+      <div class="welcome-heading">
+        <h2>ระบบคำนวณค่าน้ำมัน & ค่าบำรุงรักษาประจำที่ทำการ / ปณ.</h2>
+        <p>คำนวณค่าน้ำมันพนักงาน นำจ่ายแทน และภารกิจตรวจการนำจ่ายของหัวหน้าโซน (ชนจ.) อัตโนมัติในระบบเดียว</p>
+      </div>
 
-      <!-- 2. ABOUT SECTION (Resume-Style Layout) -->
-      <section id="about">
-        <div class="section-header">
-          <p class="section-subtitle">Discover</p>
-          <h2>About Me & Resume</h2>
-        </div>
-        
-        <div class="resume-container glass-panel">
-          <!-- Resume Header / Profile Banner -->
-          <div class="resume-header">
-            <div class="resume-profile-wrap" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-              <div class="resume-avatar-container">
-                <img id="resumeAvatar" src="./avatar_placeholder.png" alt="Profile Picture" />
-              </div>
-              <div class="resume-title-block">
-                <h3 class="glow-text">Bandit</h3>
-                <p class="resume-subtitle-text">Full-Stack Developer & Software Engineer</p>
-              </div>
+      <div class="dashboard-grid">
+        <!-- LEFT: Inputs & Configurations -->
+        <div class="panel-column">
+          <!-- Card 1: Global Configurations & Weighted Average Fuel Price -->
+          <div class="glass-card">
+            <div class="card-header">
+              <span class="card-icon">⚡</span>
+              <h3>ราคาน้ำมันและรอบการทำรายการ</h3>
             </div>
-            <div class="resume-contact-info">
-              <p><span class="logo-dot" style="margin-right: 0.25rem;"></span> 📍 Bangkok, Thailand</p>
-              <p>✉️ bandit1999main@gmail.com</p>
-              <button class="btn btn-secondary btn-print-resume" id="btnPrintResume" style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.5rem 1rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                Export PDF / Print
-              </button>
-            </div>
-          </div>
-          
-          <div class="resume-divider"></div>
-          
-          <!-- Resume Content Grid -->
-          <div class="resume-grid">
-            <!-- Left Column: Biography, Experience Timeline, Education Timeline -->
-            <div class="resume-left-col">
-              <!-- Summary Section -->
-              <div class="resume-section">
-                <h4 class="resume-section-title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-teal)" stroke-width="2" style="margin-right: 0.5rem; vertical-align: middle;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                  Professional Summary
-                </h4>
-                <p id="resumeBio" class="resume-bio-text">
-                  <!-- Dynamically populated via main.js -->
-                </p>
-              </div>
-              
-              <!-- Work Experience Section -->
-              <div class="resume-section">
-                <h4 class="resume-section-title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-teal)" stroke-width="2" style="margin-right: 0.5rem; vertical-align: middle;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                  Work Experience
-                </h4>
-                <div id="resumeExperienceList" class="resume-timeline">
-                  <!-- Dynamically populated via main.js -->
-                </div>
-              </div>
-
-              <!-- Education Section -->
-              <div class="resume-section">
-                <h4 class="resume-section-title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-teal)" stroke-width="2" style="margin-right: 0.5rem; vertical-align: middle;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg>
-                  Education
-                </h4>
-                <div id="resumeEducationList" class="resume-timeline">
-                  <!-- Dynamically populated via main.js -->
-                </div>
-              </div>
-            </div>
-
-            <!-- Right Column: Skills Layout -->
-            <div class="resume-right-col">
-              <h4 class="resume-section-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-teal)" stroke-width="2" style="margin-right: 0.5rem; vertical-align: middle;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                Technical Skills
-              </h4>
-              <div class="resume-skills-wrapper">
-                <div class="skills-category glass-panel">
-                  <h4>Frontend Core</h4>
-                  <div class="skills-grid">
-                    <div class="skill-tag">HTML5 & CSS3</div>
-                    <div class="skill-tag">JavaScript (ES6+)</div>
-                    <div class="skill-tag">React.js</div>
-                    <div class="skill-tag">Next.js</div>
-                    <div class="skill-tag">Vite & Bundlers</div>
-                    <div class="skill-tag">D3.js Visualization</div>
-                  </div>
-                </div>
-                <div class="skills-category glass-panel">
-                  <h4>Backend & Database</h4>
-                  <div class="skills-grid">
-                    <div class="skill-tag">Node.js</div>
-                    <div class="skill-tag">Express & APIs</div>
-                    <div class="skill-tag">GraphQL</div>
-                    <div class="skill-tag">MongoDB & PostgreSQL</div>
-                    <div class="skill-tag">Redis Cache</div>
-                    <div class="skill-tag">Go Language</div>
-                  </div>
-                </div>
-                <div class="skills-category glass-panel">
-                  <h4>DevOps & Tools</h4>
-                  <div class="skills-grid">
-                    <div class="skill-tag">Git & GitHub</div>
-                    <div class="skill-tag">Docker</div>
-                    <div class="skill-tag">Firebase & Cloud</div>
-                    <div class="skill-tag">Vercel & Netlify</div>
-                    <div class="skill-tag">Linux Systems</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 3. PROJECTS SECTION -->
-      <section id="projects">
-        <div class="section-header">
-          <p class="section-subtitle">Showcase</p>
-          <h2>My Creative Works</h2>
-        </div>
-        <div class="projects-grid" id="projectsGrid">
-          <!-- Dynamically generated project cards via main.js -->
-        </div>
-      </section>
-
-      <!-- 4. CONTACT SECTION -->
-      <section id="contact">
-        <div class="section-header">
-          <p class="section-subtitle">Get in touch</p>
-          <h2>Let's Collaborate</h2>
-        </div>
-        <div class="contact-container">
-          <div class="contact-info">
-            <div class="contact-card glass-panel">
-              <h3>Contact Details</h3>
-              
-              <div class="contact-method">
-                <div class="contact-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                </div>
-                <div class="contact-details">
-                  <h4>Email</h4>
-                  <p id="contactEmailText">bandit1999main@gmail.com</p>
-                </div>
-              </div>
-
-              <div class="contact-method">
-                <div class="contact-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                </div>
-                <div class="contact-details">
-                  <h4>Location</h4>
-                  <p>Bangkok, Thailand</p>
-                </div>
-              </div>
-
-              <div class="social-links">
-                <a href="https://github.com/bandit1999main" target="_blank" class="social-btn" id="githubLink" aria-label="GitHub">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                </a>
-                <a href="https://linkedin.com" target="_blank" class="social-btn" id="linkedinLink" aria-label="LinkedIn">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          <div class="contact-form-card glass-panel">
-            <form class="contact-form" id="contactForm">
+            
+            <div class="form-row-2">
               <div class="form-group">
-                <label for="formName">Your Name</label>
-                <input type="text" id="formName" class="form-input" placeholder="John Doe" required />
+                <label for="globalMonth">รอบประจำเดือน</label>
+                <select id="globalMonth" class="form-select">
+                  <option value="1">มกราคม</option>
+                  <option value="2">กุมภาพันธ์</option>
+                  <option value="3">มีนาคม</option>
+                  <option value="4">เมษายน</option>
+                  <option value="5" selected>พฤษภาคม</option>
+                  <option value="6">มิถุนายน</option>
+                  <option value="7">กรกฎาคม</option>
+                  <option value="8">สิงหาคม</option>
+                  <option value="9">กันยายน</option>
+                  <option value="10">ตุลาคม</option>
+                  <option value="11">พฤศจิกายน</option>
+                  <option value="12">ธันวาคม</option>
+                </select>
               </div>
               <div class="form-group">
-                <label for="formEmail">Your Email</label>
-                <input type="email" id="formEmail" class="form-input" placeholder="john@example.com" required />
+                <label for="globalYear">ปี พ.ศ.</label>
+                <select id="globalYear" class="form-select">
+                  <option value="2569" selected>2569</option>
+                  <option value="2570">2570</option>
+                  <option value="2571">2571</option>
+                </select>
               </div>
-              <div class="form-group">
-                <label for="formMessage">Your Message</label>
-                <textarea id="formMessage" class="form-input" placeholder="Tell me about your project..." required></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary" id="btnSubmitContact">
-                Send Message
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. ADMIN SECTION -->
-      <section id="admin">
-        <div class="section-header">
-          <p class="section-subtitle">Developer Dashboard</p>
-          <h2>Console Admin</h2>
-        </div>
-        
-        <!-- A. Login Panel -->
-        <div class="admin-login-container" id="adminLoginContainer">
-          <div class="contact-form-card glass-panel" style="max-width: 450px; margin: 0 auto;">
-            <h3 style="margin-bottom: 1.5rem; text-align: center;" class="glow-text">Authorized Access</h3>
-            <form class="contact-form" id="adminLoginForm">
-              <div class="form-group">
-                <label for="adminEmail">Email Address</label>
-                <input type="email" id="adminEmail" class="form-input" placeholder="admin@example.com" required />
-              </div>
-              <div class="form-group">
-                <label for="adminPassword">Password</label>
-                <input type="password" id="adminPassword" class="form-input" placeholder="••••••••" required />
-              </div>
-              <button type="submit" class="btn btn-primary" id="btnAdminLogin" style="width: 100%; margin-top: 1rem;">
-                Log In
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-              </button>
-              <p id="adminLoginError" style="color: #ef4444; font-size: 0.85rem; text-align: center; margin-top: 1rem; display: none;"></p>
-            </form>
-          </div>
-        </div>
-
-        <!-- B. Dashboard Manager Panel (Hidden initially) -->
-        <div class="admin-dashboard-container" id="adminDashboardContainer" style="display: none;">
-          <!-- Admin Sub-Navigation Tabs -->
-          <div class="admin-tabs" style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem;">
-            <button class="btn btn-primary admin-tab-btn" id="tabAdminProjects" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">
-              Manage Projects
-            </button>
-            <button class="btn btn-secondary admin-tab-btn" id="tabAdminResume" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">
-              Edit Resume
-            </button>
-          </div>
-
-          <div id="adminProjectsView">
-            <div class="admin-top-actions glass-panel" style="padding: 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div>
-              <p style="font-size: 0.85rem; color: var(--text-secondary);">Logged in as:</p>
-              <h4 id="adminEmailBadge" class="glow-text" style="font-size: 1.05rem;">bandit1999main@gmail.com</h4>
             </div>
-            <div style="display: flex; gap: 1rem;">
-              <button class="btn btn-primary" id="btnOpenAddForm">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Add New Project
-              </button>
-              <button class="btn btn-secondary" id="btnAdminLogout">Log Out</button>
+
+            <div class="form-group" style="margin-top: 1rem;">
+              <label for="globalFuelPrice">ราคาน้ำมันเชื้อเพลิงที่ใช้อ้างอิง (บาท/ลิตร)</label>
+              <div class="input-with-action">
+                <input type="number" id="globalFuelPrice" class="form-input text-highlight" value="38.50" step="0.01" />
+                <button type="button" id="openAvgCalcBtn" class="btn btn-secondary btn-small">
+                  🧮 คำนวณถัวเฉลี่ยถ่วงน้ำหนัก
+                </button>
+              </div>
+              <p class="input-tip">สามารถแก้ไขเพื่อใช้ราคานี้กับทุกคน หรือกดเพื่อคำนวณถัวเฉลี่ยตามระเบียบ</p>
             </div>
           </div>
 
-          <!-- Project Form Panel (Hidden initially) -->
-          <div class="project-form-panel glass-panel" id="projectFormPanel" style="display: none; padding: 2rem; margin-bottom: 2rem;">
-            <h3 id="formPanelTitle" style="margin-bottom: 1.5rem;" class="glow-text">Add New Project</h3>
-            <form id="projectEditorForm" class="contact-form">
-              <input type="hidden" id="editProjectId" />
-              <input type="hidden" id="editProjectDocId" />
-              <div class="grid-2-cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                <div class="form-group">
-                  <label for="projectTitle">Project Title</label>
-                  <input type="text" id="projectTitle" class="form-input" placeholder="Nova Commerce" required />
-                </div>
-                <div class="form-group">
-                  <label for="projectCategory">Category</label>
-                  <input type="text" id="projectCategory" class="form-input" placeholder="Full-Stack" required />
-                </div>
+          <!-- Card 2: Form Input (Staff / Supervisor Tab Switching) -->
+          <div class="glass-card">
+            <div class="auth-tabs" style="display: flex; position: relative; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem;">
+              <button class="auth-tab active" id="tabStandard" style="flex: 1; padding: 0.5rem; background: transparent; border: none; color: var(--text-primary); font-family: var(--font-main); font-weight: 700; cursor: pointer; transition: color var(--transition-fast); text-align: center;">พนักงาน / ลูกจ้างประจำ-ชั่วคราว</button>
+              <button class="auth-tab" id="tabSupervisor" style="flex: 1; padding: 0.5rem; background: transparent; border: none; color: var(--text-secondary); font-family: var(--font-main); font-weight: 700; cursor: pointer; transition: color var(--transition-fast); text-align: center;">หัวหน้าโซนนำจ่าย (ชนจ.)</button>
+            </div>
+
+            <!-- Standard Employee Form -->
+            <form id="employeeForm">
+              <input type="hidden" id="editIndex" value="" />
+              <input type="hidden" id="formMode" value="standard" /> <!-- standard or supervisor -->
+
+              <div class="form-group">
+                <label for="empName">ชื่อ - นามสกุล</label>
+                <input type="text" id="empName" class="form-input" placeholder="ตัวอย่าง: นายสมชาย รักดี" required />
               </div>
-              <div class="grid-2-cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+
+              <!-- POSITION / ROUTE SELECTION -->
+              <div class="form-row-2" id="positionRouteRow">
                 <div class="form-group">
-                  <label for="projectDemo">Demo Link (URL)</label>
-                  <input type="url" id="projectDemo" class="form-input" placeholder="https://example.com" />
+                  <label for="empPosition">ตำแหน่ง</label>
+                  <select id="empPosition" class="form-select">
+                    <option value="พนักงาน">พนักงาน</option>
+                    <option value="ลูกจ้างประจำ">ลูกจ้างประจำ</option>
+                    <option value="ลูกจ้างรายวัน">ลูกจ้างรายวัน</option>
+                    <option value="ลูกจ้าง">ลูกจ้าง</option>
+                    <option value="ลูกจ้างเหมา">ลูกจ้างเหมา</option>
+                  </select>
                 </div>
-                <div class="form-group">
-                  <label for="projectGithub">GitHub Link (URL)</label>
-                  <input type="url" id="projectGithub" class="form-input" placeholder="https://github.com" />
-                </div>
-              </div>
-              <div class="grid-2-cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                <div class="form-group">
-                  <label for="projectTags">Tags (Comma-separated)</label>
-                  <input type="text" id="projectTags" class="form-input" placeholder="React, Node.js, GraphQL" required />
-                </div>
-                <div class="form-group">
-                  <label for="projectImageClass">Gradient Theme (Background)</label>
-                  <select id="projectImageClass" class="form-input" style="background-color: var(--bg-dark); cursor: pointer;">
-                    <option value="nova-bg">Nova (Deep Purple-Indigo)</option>
-                    <option value="aether-bg">Aether (Dark Blue-Cyan)</option>
-                    <option value="quantum-bg">Quantum (Midnight Blue-Slate)</option>
+                <div class="form-group" id="deliveryRouteGroup">
+                  <label for="deliveryRoute">ด้านจ่ายประจำที่</label>
+                  <select id="deliveryRoute" class="form-select" required>
+                    <option value="" disabled selected>-- เลือกด้านจ่าย --</option>
+                    <!-- Options loaded via JS -->
                   </select>
                 </div>
               </div>
-              <div class="form-group" style="margin-bottom: 1.5rem;">
-                <label for="projectShortDesc">Short Card Description</label>
-                <input type="text" id="projectShortDesc" class="form-input" placeholder="A high-performance headless E-Commerce platform..." required />
+
+              <!-- SUPERVISOR SPECIAL MISSION CONFIGURATOR -->
+              <div id="supervisorMissionSection" class="hidden" style="background: rgba(0, 0, 0, 0.02); border: 1px solid var(--border-glass); border-radius: var(--radius-small); padding: 1rem; margin-bottom: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.85rem; color: var(--text-highlight); margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+                  <span>📋 บันทึกภารกิจปฏิบัติงานของ ชนจ.</span>
+                  <button type="button" id="addMissionBtn" class="btn btn-secondary btn-small" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">+ เพิ่มภารกิจ</button>
+                </div>
+                
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="missionType">ภารกิจที่ปฏิบัติ</label>
+                    <select id="missionType" class="form-select">
+                      <option value="ตรวจสอบการนำจ่าย">ตรวจสอบการนำจ่าย (คิดระยะทาง 1/2)</option>
+                      <option value="นำจ่ายแทน">นำจ่ายแทน (คิดระยะทางเต็ม)</option>
+                      <option value="ฝึกสอนงานเจ้าหน้าที่">ฝึกสอนงานเจ้าหน้าที่ใหม่ (สูงสุด 5 วัน)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="missionRoute">ด้านจ่ายที่ปฏิบัติงาน</label>
+                    <select id="missionRoute" class="form-select">
+                      <!-- Loaded via JS -->
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="missionDays">จำนวนวันที่ปฏิบัติงาน (วัน)</label>
+                    <input type="number" id="missionDays" class="form-input" value="1" min="1" max="31" />
+                  </div>
+                  <div class="form-group">
+                    <label for="missionDates">วันที่ปฏิบัติภารกิจ (เช่น 1-5, 12)</label>
+                    <input type="text" id="missionDates" class="form-input" placeholder="เช่น 2, 9, 18" />
+                  </div>
+                </div>
+
+                <!-- Supervisor Mission Sub-list table -->
+                <div class="modal-table-container" style="max-height: 150px; margin-top: 0.5rem; margin-bottom: 0;">
+                  <table class="modal-table" style="font-size: 0.75rem;">
+                    <thead>
+                      <tr>
+                        <th>ภารกิจ</th>
+                        <th>ด้านจ่าย</th>
+                        <th>วันปฏิบัติ</th>
+                        <th>ระยะทางรวม</th>
+                        <th>ลิตรน้ำมัน</th>
+                        <th>ลบ</th>
+                      </tr>
+                    </thead>
+                    <tbody id="missionTableBody">
+                      <tr>
+                        <td colspan="6" class="no-data" style="padding: 1rem;">ยังไม่มีการบันทึกภารกิจ</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div class="form-group" style="margin-bottom: 1.5rem;">
-                <label for="projectDesc">Detailed Description (Popup Modal)</label>
-                <textarea id="projectDesc" class="form-input" placeholder="Tell visitors about this project's architecture, tools used, performance highlights, etc..." required></textarea>
+
+              <!-- Live Route Stats Preview -->
+              <div id="routeStatsPreview" class="stats-preview-box hidden">
+                <div class="preview-title">📊 สถิติด้านจ่ายประจำตำแหน่งที่เลือก:</div>
+                <div class="preview-grid">
+                  <div class="preview-item">
+                    <div class="preview-label">ระยะทาง/วัน</div>
+                    <div class="preview-val" id="prevDistDay">-</div>
+                  </div>
+                  <div class="preview-item">
+                    <div class="preview-label">น้ำมัน/วัน</div>
+                    <div class="preview-val" id="prevFuelDay">-</div>
+                  </div>
+                  <div class="preview-item">
+                    <div class="preview-label">ระยะทาง/เดือน</div>
+                    <div class="preview-val" id="prevDistMonth">-</div>
+                  </div>
+                  <div class="preview-item">
+                    <div class="preview-label">น้ำมัน/เดือน</div>
+                    <div class="preview-val" id="prevFuelMonth">-</div>
+                  </div>
+                </div>
               </div>
-              <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                <button type="button" class="btn btn-secondary" id="btnCancelForm">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="btnSaveProject">Save Project</button>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="vehicleType">ประเภทพาหนะ</label>
+                  <select id="vehicleType" class="form-select">
+                    <option value="รถจักรยานยนต์">รถจักรยานยนต์</option>
+                    <option value="รถจักรยานยนต์ไฟฟ้า">รถจักรยานยนต์ไฟฟ้า</option>
+                    <option value="เรือยนต์">เรือยนต์</option>
+                    <option value="รถยนต์">รถยนต์</option>
+                  </select>
+                </div>
+                <div class="form-group" id="claimMethodGroup">
+                  <label for="claimMethod">รูปแบบการเบิก</label>
+                  <select id="claimMethod" class="form-select">
+                    <option value="monthly">เบิกจ่ายรายเดือน (เต็มสิทธิ์)</option>
+                    <option value="daily">เบิกจ่ายตามวันทำงานจริง</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row-2" id="workDaysRow">
+                <div class="form-group">
+                  <label for="workDays">จำนวนวันที่ทำงานจริง (วัน)</label>
+                  <input type="number" id="workDays" class="form-input" value="26" min="0" max="31" />
+                </div>
+                <div class="form-group" id="daysNotWorkedGroup">
+                  <label for="daysNotWorked">จำนวนวันที่ไม่ได้นำรถมาใช้ (วัน)</label>
+                  <input type="number" id="daysNotWorked" class="form-input" value="0" min="0" max="31" />
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="remarks">หมายเหตุ</label>
+                  <input type="text" id="remarks" class="form-input" placeholder="ระบุเพิ่มเติม (เช่น เลขทะเบียน)" />
+                </div>
+                <div class="form-group">
+                  <label for="signature">ลงนามรับเงิน</label>
+                  <input type="text" id="signature" class="form-input" placeholder="ชื่อผู้เซ็นรับ (ว่างไว้ใช้ชื่อตนเอง)" />
+                </div>
+              </div>
+
+              <div class="button-group" style="margin-top: 1rem;">
+                <button type="submit" id="saveBtn" class="btn btn-primary btn-full">
+                  📥 บันทึกข้อมูลพนักงาน
+                </button>
+                <button type="button" id="resetBtn" class="btn btn-secondary hidden">
+                  ยกเลิกการแก้ไข
+                </button>
               </div>
             </form>
           </div>
+        </div>
 
-          <!-- Project Management List -->
-          <div class="admin-project-list glass-panel" style="padding: 2rem;">
-            <h3 style="margin-bottom: 1.5rem;">Manage Portfolio Works</h3>
-            <div id="adminProjectListContainer" style="display: flex; flex-direction: column; gap: 1rem;">
-              <!-- Dynamic Rows inserted here via JS -->
+        <!-- RIGHT: Live Output Table & Statistics -->
+        <div class="panel-column">
+          <!-- Summary Counters -->
+          <div class="metrics-grid">
+            <div class="metric-card bg-orange-glow">
+              <div class="metric-info">
+                <h3>ค่าน้ำมันเชื้อเพลิงรวม</h3>
+                <p class="metric-value"><span id="sumFuelCost">0.00</span> <span class="unit">บาท</span></p>
+              </div>
+              <div class="metric-icon">⛽</div>
+            </div>
+            <div class="metric-card bg-blue-glow">
+              <div class="metric-info">
+                <h3>ค่าบำรุงรักษารวม</h3>
+                <p class="metric-value"><span id="sumMaintenanceCost">0.00</span> <span class="unit">บาท</span></p>
+              </div>
+              <div class="metric-icon">🔧</div>
+            </div>
+            <div class="metric-card bg-emerald-glow">
+              <div class="metric-info">
+                <h3>ยอดเงินเบิกจ่ายรวมสุทธิ</h3>
+                <p class="metric-value highlight"><span id="sumTotalCost">0.00</span> <span class="unit">บาท</span></p>
+              </div>
+              <div class="metric-icon">💰</div>
             </div>
           </div>
-          </div> <!-- End #adminProjectsView -->
 
-          <!-- C. Resume Manager Panel (Hidden initially) -->
-          <div id="adminResumeView" style="display: none;">
-            <div class="resume-form-panel glass-panel" style="padding: 2rem; margin-bottom: 2rem;">
-              <h3 style="margin-bottom: 1.5rem;" class="glow-text">Edit Resume Data</h3>
-              <form id="resumeEditorForm" class="contact-form">
-                <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                  <div class="form-group">
-                    <label for="resumeInputAvatar">Avatar Image URL / Path</label>
-                    <input type="text" id="resumeInputAvatar" class="form-input" placeholder="e.g., ./avatar_placeholder.png or a hosted image link" />
-                  </div>
-                  <div class="form-group">
-                    <label for="resumeInputBio">Bio / Professional Summary</label>
-                    <textarea id="resumeInputBio" class="form-input" placeholder="Summarize your professional background..." style="min-height: 120px;" required></textarea>
-                  </div>
-                </div>
+          <!-- Main Table Card -->
+          <div class="glass-card full-width">
+            <div class="card-header table-header-flex">
+              <div class="header-left">
+                <span class="card-icon">📋</span>
+                <h3>รายการพนักงานเบิกจ่ายค่าน้ำมันค้างจ่ายประจำ ปณ.</h3>
+              </div>
+              <div class="header-actions-flex">
+                <button type="button" id="loadDemoBtn" class="btn btn-secondary btn-small">
+                  🌟 โหลดข้อมูลตัวอย่าง
+                </button>
+                <button type="button" id="exportCsvBtn" class="btn btn-secondary btn-small">
+                  📊 ส่งออก Excel (CSV)
+                </button>
+                <button type="button" id="printReportBtn" class="btn btn-primary btn-small">
+                  🖨️ พิมพ์ใบเบิกเงิน / PDF
+                </button>
+                <button type="button" id="clearAllBtn" class="btn btn-danger btn-small">
+                  🗑️ ล้างทั้งหมด
+                </button>
+              </div>
+            </div>
 
-                <!-- Experience List Editor -->
-                <div style="margin-bottom: 2rem;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-                    <h4 style="color: var(--text-primary); font-family: var(--font-title); font-size: 1.1rem;">Work Experience Timeline</h4>
-                    <button type="button" class="btn btn-secondary" id="btnAddExpInput" style="padding: 0.4rem 1rem; font-size: 0.85rem;">
-                      + Add Job Experience
-                    </button>
-                  </div>
-                  <div id="resumeExpInputsContainer" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <!-- Dynamic rows of experience inputs will be loaded here -->
-                  </div>
-                </div>
-
-                <!-- Education List Editor -->
-                <div style="margin-bottom: 2rem; border-top: 1px solid var(--border-glass); padding-top: 1.5rem;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-                    <h4 style="color: var(--text-primary); font-family: var(--font-title); font-size: 1.1rem;">Education Timeline</h4>
-                    <button type="button" class="btn btn-secondary" id="btnAddEduInput" style="padding: 0.4rem 1rem; font-size: 0.85rem;">
-                      + Add Education Item
-                    </button>
-                  </div>
-                  <div id="resumeEduInputsContainer" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <!-- Dynamic rows of education inputs will be loaded here -->
-                  </div>
-                </div>
-
-                <div style="display: flex; gap: 1rem; justify-content: flex-end; border-top: 1px solid var(--border-glass); padding-top: 1.5rem;">
-                  <button type="submit" class="btn btn-primary" id="btnSaveResume">Save Resume</button>
-                </div>
-              </form>
+            <!-- Scrollable Table Container -->
+            <div class="table-container">
+              <table id="employeeTable">
+                <thead>
+                  <tr>
+                    <th>ลำดับ</th>
+                    <th>ชื่อ - นามสกุล</th>
+                    <th>ตำแหน่ง/บทบาท</th>
+                    <th>รายละเอียด/ด้านจ่าย</th>
+                    <th>ปริมาณน้ำมัน (ลิตร)</th>
+                    <th>ค่าน้ำมัน (บาท)</th>
+                    <th>ค่าบำรุงรักษา (บาท)</th>
+                    <th>รวมเบิกจ่าย (บาท)</th>
+                    <th>ลงนามผู้รับ</th>
+                    <th class="actions-col">จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody id="employeeTableBody">
+                  <tr>
+                    <td colspan="10" class="no-data">ยังไม่มีข้อมูลในตาราง กรุณากรอกข้อมูลด้านซ้าย หรือคลิก "โหลดข้อมูลตัวอย่าง"</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
-      </section>
-
+      </div>
     </main>
 
-    <!-- Project Detail Modal -->
-    <div class="modal-overlay" id="projectModal">
-      <div class="modal-content glass-panel">
-        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-        <div class="modal-hero" id="modalHero">
-          <!-- Abstract SVG Graphic is loaded here -->
+    <!-- Modal: Weighted Average Oil Price Calculator -->
+    <div id="avgCalcModal" class="modal-overlay">
+      <div class="modal-content glass-modal animate-slide-in">
+        <div class="modal-header">
+          <h3>เครื่องมือคำนวณราคาน้ำมันเฉลี่ยถ่วงน้ำหนัก (ถัวเฉลี่ยรายวัน)</h3>
+          <button type="button" id="closeAvgModalBtn" class="btn-close">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="modal-header-info">
-            <div>
-              <span class="modal-category" id="modalCategory">Category</span>
-              <h3 class="modal-title" id="modalTitle">Project Title</h3>
+          <p class="modal-instruction">
+            คำนวณราคาเฉลี่ยน้ำมันเชื้อเพลิงถ่วงน้ำหนักตามจำนวนวันในเดือนนั้น ๆ ตามระเบียบไปรษณีย์ไทย ข้อ 1.5 และ 2.2
+          </p>
+          
+          <div class="form-row-3" style="align-items: flex-end;">
+            <div class="form-group">
+              <label for="priceInput">ราคาน้ำมันในช่วงเวลานั้น (บาท)</label>
+              <input type="number" id="priceInput" class="form-input" placeholder="เช่น 30.18" step="0.01" />
             </div>
-            <div class="modal-links">
-              <a href="#" target="_blank" class="social-btn" id="modalGithubLink" aria-label="GitHub">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-              </a>
-              <a href="#" target="_blank" class="social-btn" id="modalDemoLink" aria-label="Live Demo">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-              </a>
+            <div class="form-group">
+              <label for="daysInput">จำนวนวันทีใช้ราคานี้ (วัน)</label>
+              <input type="number" id="daysInput" class="form-input" placeholder="เช่น 9" min="1" max="31" />
             </div>
-          </div>
-          <p class="modal-description" id="modalDescription">Detailed project description goes here.</p>
-          <div class="modal-tech">
-            <h4>Technologies Used</h4>
-            <div class="project-tags" id="modalTags">
-              <!-- Tags rendered here -->
-            </div>
+            <button type="button" id="addPeriodBtn" class="btn btn-primary" style="height: 42px; margin-bottom: 4px;">
+              ➕ เพิ่มช่วงราคา
+            </button>
           </div>
 
-          <!-- Comments Section (Interactive Discussion Board) -->
-          <div class="modal-comments" style="margin-top: 2rem; border-top: 1px solid var(--border-glass); padding-top: 2rem;">
-            <h4 style="font-family: var(--font-title); font-size: 1.25rem; margin-bottom: 1.2rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-teal);"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-              Discussion (<span id="modalCommentCount">0</span>)
-            </h4>
-            
-            <!-- Comment Form Input -->
-            <div id="commentInputArea" style="margin-bottom: 1.5rem;">
-              <!-- Dynamic via JS based on auth states -->
+          <div class="modal-table-container">
+            <table class="modal-table">
+              <thead>
+                <tr>
+                  <th>ช่วงที่</th>
+                  <th>ราคาน้ำมัน (บาท/ลิตร)</th>
+                  <th>จำนวนวันที่ใช้ราคานี้ (วัน)</th>
+                  <th>ราคารวมสะสม (บาท)</th>
+                  <th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="periodTableBody">
+                <tr>
+                  <td colspan="5" class="no-data">ยังไม่มีการเพิ่มช่วงราคา</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="modal-summary-box">
+            <div class="summary-line">
+              <span>จำนวนวันสะสมทั้งหมด:</span>
+              <strong id="avgCalcTotalDays">0 วัน</strong>
             </div>
-            
-            <!-- Comments rendering target -->
-            <div id="modalCommentsList" style="display: flex; flex-direction: column; gap: 1rem; max-height: 350px; overflow-y: auto; padding-right: 0.5rem;">
-              <!-- Dynamic items inserted via JS -->
+            <div class="summary-line">
+              <span>ผลคูณราคารวมสะสม:</span>
+              <strong id="avgCalcTotalSum">0.00 บาท</strong>
+            </div>
+            <div class="summary-line final">
+              <span>ราคาน้ำมันถัวเฉลี่ยถ่วงน้ำหนักสุทธิ:</span>
+              <span id="avgCalcResultPrice">0.00 บาท/ลิตร</span>
             </div>
           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancelAvgBtn" class="btn btn-secondary">ยกเลิก</button>
+          <button type="button" id="applyAvgPriceBtn" class="btn btn-primary" disabled>
+            ✔️ นำราคานี้ไปใช้เป็นค่าราคากลาง
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- 6. MULTI-USER AUTH MODAL -->
-    <div class="modal-overlay" id="authModal">
-      <div class="modal-content auth-modal-content glass-panel" style="max-width: 450px;">
-        <button class="modal-close-btn" id="authModalCloseBtn" aria-label="Close modal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-        <div class="auth-tabs" style="display: flex; position: relative; margin-bottom: 2rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem;">
-          <button class="auth-tab active" id="tabGuest" data-tab="guest" style="flex: 1; padding: 0.75rem; background: transparent; border: none; color: var(--text-primary); font-family: var(--font-title); font-weight: 600; cursor: pointer; transition: color var(--transition-fast); text-align: center;">Visitor Portal</button>
-          <button class="auth-tab" id="tabAdmin" data-tab="admin" style="flex: 1; padding: 0.75rem; background: transparent; border: none; color: var(--text-secondary); font-family: var(--font-title); font-weight: 600; cursor: pointer; transition: color var(--transition-fast); text-align: center;">Developer Access</button>
-          <div class="auth-tab-glider" style="position: absolute; bottom: -1px; left: 0; width: 50%; height: 2px; background: var(--accent-gradient); transition: all var(--transition-normal);"></div>
+    <!-- Printable Official Report Layout (Hidden on Screen, Visible on Print) -->
+    <div id="printReportArea" class="print-only">
+      <div class="print-header">
+        <div class="print-title-container">
+          <h2>ใบหลักฐานการเบิกจ่ายเงินค่าน้ำมันเชื้อเพลิงและค่าบำรุงรักษายานพาหนะ</h2>
+          <h3>บริษัท ไปรษณีย์ไทย จำกัด</h3>
+          <p>ประจำเดือน <span id="printMonthText">-</span> พ.ศ. <span id="printYearText">-</span></p>
         </div>
-        
-        <!-- Visitor Panel -->
-        <div class="auth-panel active" id="panelGuest" style="display: block;">
-          <h3 class="auth-title glow-text" id="guestPanelTitle" style="font-size: 1.5rem; font-family: var(--font-title); margin-bottom: 0.5rem; text-align: center;">Welcome Visitor</h3>
-          <p class="auth-subtitle" style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-bottom: 1.5rem;">Join the universe to like projects and collaborate!</p>
-          <form class="contact-form" id="guestAuthForm">
-            <input type="hidden" id="guestAuthMode" value="login" />
-            <div class="form-group" id="groupGuestName" style="display: none; margin-bottom: 1rem;">
-              <label for="guestName">Display Name</label>
-              <input type="text" id="guestName" class="form-input" placeholder="Bandit Jr." />
-            </div>
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label for="guestEmail">Email Address</label>
-              <input type="email" id="guestEmail" class="form-input" placeholder="visitor@example.com" required />
-            </div>
-            <div class="form-group" style="margin-bottom: 1.5rem;">
-              <label for="guestPassword">Password</label>
-              <input type="password" id="guestPassword" class="form-input" placeholder="••••••••" required />
-            </div>
-            <button type="submit" class="btn btn-primary" id="btnGuestAuth" style="width: 100%; justify-content: center;">
-              Log In
-            </button>
-            <div class="auth-divider">OR</div>
-            <button type="button" class="btn btn-google" id="btnGoogleAuth">
-              <svg width="18" height="18" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-              </svg>
-              <span>Sign In with Google</span>
-            </button>
-            <p id="guestAuthError" style="color: #ef4444; font-size: 0.85rem; text-align: center; margin-top: 1rem; display: none;"></p>
-            <p class="auth-toggle-text" style="font-size: 0.85rem; text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
-              Don't have an account? <a href="#" id="toggleGuestMode" style="color: var(--accent-teal); text-decoration: none; font-weight: 500;">Create Account</a>
-            </p>
-          </form>
+        <div class="print-meta-info">
+          <p>ราคาน้ำมันถัวเฉลี่ยอ้างอิง: <strong><span id="printRefPriceText">0.00</span> บาท/ลิตร</strong></p>
         </div>
-        
-        <!-- Admin Panel -->
-        <div class="auth-panel" id="panelAdmin" style="display: none;">
-          <h3 class="auth-title glow-text" style="font-size: 1.5rem; font-family: var(--font-title); margin-bottom: 0.5rem; text-align: center;">Admin Access</h3>
-          <p class="auth-subtitle" style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-bottom: 1.5rem;">Enter credentials to unlock developer dashboard.</p>
-          <form class="contact-form" id="modalAdminLoginForm">
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label for="modalAdminEmail">Admin Email</label>
-              <input type="email" id="modalAdminEmail" class="form-input" placeholder="admin@example.com" required />
-            </div>
-            <div class="form-group" style="margin-bottom: 1.5rem;">
-              <label for="modalAdminPassword">Password</label>
-              <input type="password" id="modalAdminPassword" class="form-input" placeholder="••••••••" required />
-            </div>
-            <button type="submit" class="btn btn-primary" id="btnModalAdminLogin" style="width: 100%; justify-content: center;">
-              Access Console
-            </button>
-            <p id="modalAdminLoginError" style="color: #ef4444; font-size: 0.85rem; text-align: center; margin-top: 1rem; display: none;"></p>
-          </form>
+      </div>
+
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th style="width: 5%">ลำดับ</th>
+            <th style="width: 20%">ชื่อ - นามสกุลผู้รับเงิน</th>
+            <th style="width: 12%">ตำแหน่ง / บทบาท</th>
+            <th style="width: 15%">รายละเอียดภารกิจ / ด้านจ่าย</th>
+            <th style="width: 8%">วันทำงาน</th>
+            <th style="width: 8%">น้ำมัน (ลิตร)</th>
+            <th style="width: 8%">ค่าน้ำมัน (บาท)</th>
+            <th style="width: 8%">ค่าบำรุงรักษา (บาท)</th>
+            <th style="width: 8%">รวมเงิน (บาท)</th>
+            <th style="width: 10%">ลายมือชื่อผู้รับเงิน</th>
+            <th style="width: 10%">หมายเหตุ</th>
+          </tr>
+        </thead>
+        <tbody id="printTableBody">
+          <!-- Rendered via JS -->
+        </tbody>
+      </table>
+
+      <div class="print-summary-section">
+        <div class="summary-block">
+          <p>จำนวนรายชื่อผู้รับเงินทั้งสิ้น: <strong id="printTotalCount">-</strong> ราย</p>
+          <p>รวมค่าน้ำมันเชื้อเพลิงทั้งสิ้น: <strong id="printTotalFuel">-</strong> บาท</p>
+          <p>รวมค่าบำรุงรักษาทั้งสิ้น: <strong id="printTotalMaintenance">-</strong> บาท</p>
+          <p class="final-sum">ยอดเงินเบิกจ่ายรวมทั้งสิ้น: <strong id="printGrandTotal">-</strong> บาท</p>
+        </div>
+      </div>
+
+      <div class="print-signatures">
+        <div class="sig-box">
+          <p>ลงชื่อ..........................................................ผู้จัดทำ</p>
+          <p style="margin-top: 0.5rem;">(..........................................................)</p>
+          <p>ตำแหน่ง..........................................................</p>
+        </div>
+        <div class="sig-box">
+          <p>ลงชื่อ..........................................................ผู้ตรวจสอบ</p>
+          <p style="margin-top: 0.5rem;">(..........................................................)</p>
+          <p>ตำแหน่ง หน.สพ./ปจ. ..........................................................</p>
+        </div>
+        <div class="sig-box">
+          <p>ลงชื่อ..........................................................ผู้อนุมัติ</p>
+          <p style="margin-top: 0.5rem;">(..........................................................)</p>
+          <p>ตำแหน่ง ผู้จัดการฝ่าย..........................................................</p>
         </div>
       </div>
     </div>
 
-    <!-- Success Toast Alert -->
-    <div class="success-toast glass-panel" id="successToast">
-      <div class="toast-icon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      </div>
-      <div>
-        <h4 style="font-size: 0.95rem; margin-bottom: 0.2rem; color: var(--text-primary);">Message Sent!</h4>
-        <p style="font-size: 0.8rem; color: var(--text-secondary);">Thank you. I'll get back to you soon.</p>
-      </div>
-    </div>
-
-    <footer>
-      <p>&copy; 2026 Bandit. Crafted with passion, Vite & Glassmorphism. | <a href="#admin" style="color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.8rem; transition: color var(--transition-fast);" onmouseover="this.style.color='var(--accent-teal)'" onmouseout="this.style.color='var(--text-muted)'">Admin Console</a></p>
-    </footer>
-
+    <!-- Scripts -->
     <script type="module" src="/main.js"></script>
   </body>
 </html>
