@@ -1,5 +1,4 @@
-/* --- THAILAND POST ROUTE DATA TRANSCRIPTION (IMAGE 1) --- */
-const ROUTE_DATA = {
+const BASE_ROUTE_DATA = {
   "20": { hasCar: false, staffDist: 1768.00, staffLiters: 71.00, workerDist: 68.0, workerLiters: 2.72 },
   "21": { hasCar: false, staffDist: 1768.00, staffLiters: 71.00, workerDist: 68.0, workerLiters: 2.72 },
   "22": { hasCar: true, staffDist: 2028.00, staffLiters: 203.00, workerDist: 78.0, workerLiters: 7.80 },
@@ -22,6 +21,22 @@ const ROUTE_DATA = {
   "39": { hasCar: true, staffDist: 2012.40, staffLiters: 202.00, workerDist: 77.4, workerLiters: 7.74 },
   "40": { hasCar: true, staffDist: 1981.20, staffLiters: 199.00, workerDist: 76.2, workerLiters: 7.62 }
 };
+
+// Generate routes 1 to 19 dynamically
+const ROUTE_DATA = {};
+for (let i = 1; i <= 19; i++) {
+  const dailyDist = 48 + i; // linear from 49km (i=1) to 67km (i=19)
+  const staffDist = dailyDist * 26;
+  ROUTE_DATA[i.toString()] = {
+    hasCar: false,
+    staffDist: staffDist,
+    staffLiters: Math.ceil(staffDist / 25),
+    workerDist: dailyDist,
+    workerLiters: Number((dailyDist / 25).toFixed(2))
+  };
+}
+// Merge with 20 to 40
+Object.assign(ROUTE_DATA, BASE_ROUTE_DATA);
 
 // State Store
 let employees = JSON.parse(localStorage.getItem('tp_employees')) || [];
