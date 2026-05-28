@@ -1542,10 +1542,6 @@ function printReport() {
       return;
     }
     
-    // Toggle correct print area
-    document.getElementById('printWaterReportArea').style.display = 'block';
-    document.getElementById('printReportArea').style.display = 'none';
-    
     document.getElementById('printWaterMonthText').textContent = globalMonthSelect.options[globalMonthSelect.selectedIndex].text;
     document.getElementById('printWaterYearText').textContent = globalYearSelect.value;
     
@@ -1619,10 +1615,6 @@ function printReport() {
     alert('ไม่มีข้อมูลที่จะพิมพ์!');
     return;
   }
-
-  // Toggle correct print area
-  document.getElementById('printWaterReportArea').style.display = 'none';
-  document.getElementById('printReportArea').style.display = 'block';
 
   const currentFuelPrice = parseFloat(globalFuelPriceInput.value) || 38.50;
   
