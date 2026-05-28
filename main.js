@@ -452,7 +452,7 @@ function calculateMaintenanceCost(item) {
       const route = ROUTE_DATA[m.route];
       if (!route) return;
 
-      const dailyDist = route.workerDist;
+      const dailyDist = m.type === 'ตรวจสอบการนำจ่าย' ? (route.workerDist / 2) : route.workerDist;
       
       // Tier classification for maintenance
       let tier = '';
