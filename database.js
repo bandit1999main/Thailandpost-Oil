@@ -6,7 +6,8 @@ import {
   getDocs, 
   setDoc, 
   deleteDoc, 
-  writeBatch 
+  writeBatch,
+  onSnapshot
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -63,6 +64,12 @@ export async function fetchEmployees() {
 
 // Save all employees to Firestore in batch
 export async function saveEmployees(employeesList) {
+  // Ensure every item has a stable unique ID
+  const now = Date.now();
+  employeesList.forEach((emp, i) => {
+    if (!emp.id) emp.id = `emp_${now}_${i}`;
+  });
+
   // Always update local storage first
   localStorage.setItem('tp_employees', JSON.stringify(employeesList));
 
@@ -71,7 +78,7 @@ export async function saveEmployees(employeesList) {
   try {
     const batch = writeBatch(db);
     
-    // First, let's get all existing docs to clean up deleted ones
+    // First, get all existing docs to clean up deleted ones
     const querySnapshot = await getDocs(collection(db, "employees"));
     querySnapshot.forEach((d) => {
       if (!employeesList.some(emp => String(emp.id) === d.id)) {
@@ -119,6 +126,12 @@ export async function fetchWaterEmployees() {
 
 // Save all water employees to Firestore in batch
 export async function saveWaterEmployees(employeesList) {
+  // Ensure every item has a stable unique ID
+  const now = Date.now();
+  employeesList.forEach((emp, i) => {
+    if (!emp.id) emp.id = `water_${now}_${i}`;
+  });
+
   localStorage.setItem('tp_water_employees', JSON.stringify(employeesList));
 
   if (!isCloudConnected()) return false;
@@ -333,4 +346,36 @@ export async function deleteSignatoryProfile(profileName) {
     return false;
   }
 }
+
+/**
+ * --- REAL-TIME AUTOSYNC listeners ---
+ */
+export function listenToEmployees(callback) {
+  if (!isCloudConnected()) return null;
+  return onSnapshot(collection(db, "employees"), (snapshot) => {
+    const list = [];
+    snapshot.forEach((doc) => {
+      list.push({ ...doc.data(), id: doc.id });
+    });
+    localStorage.setItem('tp_employees', JSON.stringify(list));
+    callback(list);
+  }, (error) => {
+    console.error("Firestore listenToEmployees failed:", error);
+  });
+}
+
+export function listenToWaterEmployees(callback) {
+  if (!isCloudConnected()) return null;
+  return onSnapshot(collection(db, "water_employees"), (snapshot) => {
+    const list = [];
+    snapshot.forEach((doc) => {
+      list.push({ ...doc.data(), id: doc.id });
+    });
+    localStorage.setItem('tp_water_employees', JSON.stringify(list));
+    callback(list);
+  }, (error) => {
+    console.error("Firestore listenToWaterEmployees failed:", error);
+  });
+}
+
 

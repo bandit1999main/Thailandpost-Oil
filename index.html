@@ -674,6 +674,94 @@
     </div>
 
 
+    <!-- Modal: Edit Employee (Popup) -->
+    <div id="editEmployeeModal" class="modal-overlay">
+      <div class="modal-content glass-modal animate-slide-in" style="max-width: 500px;">
+        <div class="modal-header">
+          <h3>✏️ แก้ไขข้อมูลพนักงาน</h3>
+          <button type="button" id="closeEditModalBtn" class="btn-close">&times;</button>
+        </div>
+        <form id="editEmployeeForm">
+          <input type="hidden" id="modalEditIndex" value="" />
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="modalEmpName">ชื่อ - นามสกุล</label>
+              <input type="text" id="modalEmpName" class="form-input" required />
+            </div>
+
+            <div class="form-group">
+              <label for="modalEmpPosition">ตำแหน่ง/บทบาท</label>
+              <select id="modalEmpPosition" class="form-select">
+                <!-- Dynamically populated depending on activeMode -->
+              </select>
+            </div>
+
+            <!-- Fuel Mode specific inputs -->
+            <div id="modalFuelFields">
+              <div class="form-group">
+                <label for="modalDeliveryRoute">ด้านจ่ายประจำที่</label>
+                <select id="modalDeliveryRoute" class="form-select">
+                  <!-- Dynamically populated -->
+                </select>
+              </div>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="modalVehicleType">ประเภทพาหนะ</label>
+                  <select id="modalVehicleType" class="form-select">
+                    <option value="รถจักรยานยนต์">รถจักรยานยนต์</option>
+                    <option value="รถจักรยานยนต์ไฟฟ้า">รถจักรยานยนต์ไฟฟ้า</option>
+                    <option value="เรือยนต์">เรือยนต์</option>
+                    <option value="รถยนต์">รถยนต์</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="modalClaimMethod">รูปแบบการเบิก</label>
+                  <select id="modalClaimMethod" class="form-select">
+                    <option value="monthly">เบิกจ่ายรายเดือน (เต็มสิทธิ์)</option>
+                    <option value="daily">เบิกจ่ายตามวันทำงานจริง</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group" id="modalDaysNotWorkedGroup">
+                <label for="modalDaysNotWorked">จำนวนวันที่ไม่ได้นำรถมาใช้ (วัน)</label>
+                <input type="number" id="modalDaysNotWorked" class="form-input" min="0" max="31" value="0" />
+              </div>
+            </div>
+
+            <!-- Water Mode specific inputs -->
+            <div id="modalWaterFields" class="hidden">
+              <div class="form-group">
+                <label for="modalEmpSalary">เงินเดือน (บาท)</label>
+                <input type="number" id="modalEmpSalary" class="form-input text-highlight" value="0" />
+              </div>
+            </div>
+
+            <!-- Common inputs -->
+            <div class="form-group">
+              <label for="modalWorkDays">จำนวนวันที่ปฏิบัติงานจริง (วัน)</label>
+              <input type="number" id="modalWorkDays" class="form-input" min="0" max="31" value="26" required />
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="modalRemarks">หมายเหตุ</label>
+                <input type="text" id="modalRemarks" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label for="modalSignature">ลงนามรับเงิน</label>
+                <input type="text" id="modalSignature" class="form-input" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="cancelEditModalBtn" class="btn btn-secondary">ยกเลิก</button>
+            <button type="submit" class="btn btn-primary">✔️ อัปเดตข้อมูล</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
     <!-- Printable Official Fuel Report Layout (Hidden on Screen, Visible on Print) -->
     <div id="printReportArea" class="print-only">
       <div class="print-header">

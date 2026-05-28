@@ -4,6 +4,8 @@ import {
   saveEmployees,
   fetchWaterEmployees,
   saveWaterEmployees,
+  listenToEmployees,
+  listenToWaterEmployees,
   fetchRouteData,
   saveRouteData,
   resetCloudRouteData,
@@ -266,6 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
   closeSigProfilesBtn.addEventListener('click', () => sigProfilesModal.classList.remove('active'));
   saveSigProfileBtn.addEventListener('click', handleSaveSigProfile);
 
+  wireEditModal();
+
   // Render Table & Initial Cloud Sync
   renderEmployeeTable();
   initCloudSync();
@@ -281,10 +285,16 @@ async function initCloudSync() {
       badge.className = 'db-status-badge connected';
       badge.querySelector('.status-text').textContent = '🔥 เชื่อมต่อคลาวด์แล้ว';
       
-      // Fetch cloud employees
+      // Fetch cloud employees (initial load)
       const cloudEmployees = await fetchEmployees();
       if (cloudEmployees && cloudEmployees.length > 0) {
         employees = cloudEmployees;
+      }
+      
+      // Fetch cloud water employees (initial load)
+      const cloudWaterEmployees = await fetchWaterEmployees();
+      if (cloudWaterEmployees && cloudWaterEmployees.length > 0) {
+        waterEmployees = cloudWaterEmployees;
       }
       
       // Fetch cloud route data
@@ -300,6 +310,18 @@ async function initCloudSync() {
       updateAllRouteDropdownTexts();
       renderEmployeeTable();
       updateTemplateSelectDropdown();
+
+      // ===== REAL-TIME LISTENERS (cross-device sync) =====
+      listenToEmployees((updatedList) => {
+        employees = updatedList;
+        if (activeMode === 'fuel') renderEmployeeTable();
+      });
+
+      listenToWaterEmployees((updatedList) => {
+        waterEmployees = updatedList;
+        if (activeMode === 'water') renderEmployeeTable();
+      });
+
     } else {
       badge.className = 'db-status-badge offline';
       badge.querySelector('.status-text').textContent = '⚠️ โหมดออฟไลน์';
@@ -310,7 +332,6 @@ async function initCloudSync() {
     badge.querySelector('.status-text').textContent = '⚠️ โหมดออฟไลน์';
   }
 }
-
 
 /* --- THEME TOGGLE --- */
 function toggleTheme() {
@@ -796,6 +817,142 @@ function calculateMaintenanceCost(item) {
   }
 }
 
+function openEditModal(isWaterMode, idx) {
+  const modal = document.getElementById('editEmployeeModal');
+  const modalTitle = modal.querySelector('h3');
+  const modalEmpName = document.getElementById('modalEmpName');
+  const modalEmpPosition = document.getElementById('modalEmpPosition');
+  const modalWorkDays = document.getElementById('modalWorkDays');
+  const modalRemarks = document.getElementById('modalRemarks');
+  const modalSignature = document.getElementById('modalSignature');
+  const modalEditIndex = document.getElementById('modalEditIndex');
+  const modalFuelFields = document.getElementById('modalFuelFields');
+  const modalWaterFields = document.getElementById('modalWaterFields');
+  const modalDeliveryRoute = document.getElementById('modalDeliveryRoute');
+  const modalVehicleType = document.getElementById('modalVehicleType');
+  const modalClaimMethod = document.getElementById('modalClaimMethod');
+  const modalDaysNotWorked = document.getElementById('modalDaysNotWorked');
+  const modalDaysNotWorkedGroup = document.getElementById('modalDaysNotWorkedGroup');
+  const modalEmpSalary = document.getElementById('modalEmpSalary');
+
+  modalEditIndex.value = idx;
+  modal.dataset.isWater = isWaterMode ? '1' : '0';
+
+  // Populate position dropdown
+  if (isWaterMode) {
+    modalTitle.textContent = '✏️ แก้ไขข้อมูลค่าน้ำดื่ม';
+    modalFuelFields.classList.add('hidden');
+    modalWaterFields.classList.remove('hidden');
+    modalEmpPosition.innerHTML = `
+      <option value="เจ้าหน้าที่นำจ่ายไปรษณีย์/EMS/ด้านจ่ายพิเศษ">เจ้าหน้าที่นำจ่ายไปรษณีย์/EMS/ด้านจ่ายพิเศษ</option>
+      <option value="เจ้าหน้าที่ไขตู้ไปรษณีย์">เจ้าหน้าที่ไขตู้ไปรษณีย์</option>
+      <option value="หัวหน้าโซนนำจ่าย">หัวหน้าโซนนำจ่าย</option>
+      <option value="เจ้าหน้าที่รับฝากนอกที่ทำการ">เจ้าหน้าที่รับฝากนอกที่ทำการ</option>
+      <option value="ปณอ.(รับ/จ่าย)/ผู้ช่วยนำจ่าย">ปณอ.(รับ/จ่าย)/ผู้ช่วยนำจ่าย</option>
+    `;
+    const item = waterEmployees[idx];
+    modalEmpName.value = item.name;
+    modalEmpPosition.value = item.position;
+    modalEmpSalary.value = item.salary;
+    modalWorkDays.value = item.workDays;
+    modalRemarks.value = item.remarks || '';
+    modalSignature.value = item.signature || '';
+  } else {
+    modalTitle.textContent = '✏️ แก้ไขข้อมูลพนักงาน';
+    modalFuelFields.classList.remove('hidden');
+    modalWaterFields.classList.add('hidden');
+    modalEmpPosition.innerHTML = `
+      <option value="พนักงาน">พนักงาน</option>
+      <option value="ลูกจ้างประจำ">ลูกจ้างประจำ</option>
+      <option value="ลูกจ้างรายวัน">ลูกจ้างรายวัน</option>
+      <option value="ลูกจ้าง">ลูกจ้าง</option>
+      <option value="ลูกจ้างเหมา">ลูกจ้างเหมา</option>
+    `;
+
+    // Populate route dropdown from current ROUTE_DATA
+    modalDeliveryRoute.innerHTML = '<option value="" disabled>-- เลือกด้านจ่าย --</option>';
+    Object.keys(ROUTE_DATA).forEach(route => {
+      const opt = document.createElement('option');
+      opt.value = route;
+      opt.textContent = `ด้านจ่ายที่ ${route}${ROUTE_DATA[route].hasCar ? ' (รถยนต์)' : ''}`;
+      modalDeliveryRoute.appendChild(opt);
+    });
+
+    const item = employees[idx];
+    modalEmpName.value = item.name;
+    modalEmpPosition.value = item.position;
+    modalDeliveryRoute.value = item.route || '';
+    modalVehicleType.value = item.vehicle || 'รถจักรยานยนต์';
+    modalClaimMethod.value = item.method || 'monthly';
+    modalDaysNotWorked.value = item.daysNotWorked || 0;
+    if (item.method === 'monthly') {
+      modalDaysNotWorkedGroup.classList.remove('hidden');
+    } else {
+      modalDaysNotWorkedGroup.classList.add('hidden');
+    }
+    modalWorkDays.value = item.workDays;
+    modalRemarks.value = item.remarks || '';
+    modalSignature.value = item.signature || '';
+  }
+
+  // Show modal
+  modal.classList.add('active');
+}
+
+function wireEditModal() {
+  const modal = document.getElementById('editEmployeeModal');
+  const form = document.getElementById('editEmployeeForm');
+  const closeBtn = document.getElementById('closeEditModalBtn');
+  const cancelBtn = document.getElementById('cancelEditModalBtn');
+  const modalClaimMethod = document.getElementById('modalClaimMethod');
+  const modalDaysNotWorkedGroup = document.getElementById('modalDaysNotWorkedGroup');
+
+  closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+  cancelBtn.addEventListener('click', () => modal.classList.remove('active'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
+  modalClaimMethod.addEventListener('change', () => {
+    if (modalClaimMethod.value === 'monthly') {
+      modalDaysNotWorkedGroup.classList.remove('hidden');
+    } else {
+      modalDaysNotWorkedGroup.classList.add('hidden');
+      document.getElementById('modalDaysNotWorked').value = 0;
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const isWater = modal.dataset.isWater === '1';
+    const idx = parseInt(document.getElementById('modalEditIndex').value);
+
+    const name = document.getElementById('modalEmpName').value.trim();
+    const position = document.getElementById('modalEmpPosition').value;
+    const workDays = parseInt(document.getElementById('modalWorkDays').value) || 0;
+    const remarks = document.getElementById('modalRemarks').value.trim();
+    const signature = document.getElementById('modalSignature').value.trim() || name;
+
+    if (isWater) {
+      const salary = parseFloat(document.getElementById('modalEmpSalary').value) || 0;
+      const existingId = waterEmployees[idx]?.id;
+      waterEmployees[idx] = { name, position, salary, workDays, remarks, signature };
+      if (existingId) waterEmployees[idx].id = existingId;
+      await saveWaterEmployees(waterEmployees);
+    } else {
+      const route = document.getElementById('modalDeliveryRoute').value;
+      const vehicle = document.getElementById('modalVehicleType').value;
+      const method = document.getElementById('modalClaimMethod').value;
+      const daysNotWorked = parseInt(document.getElementById('modalDaysNotWorked').value) || 0;
+      const existingId = employees[idx]?.id;
+      employees[idx] = { ...employees[idx], name, position, route, vehicle, method, workDays, daysNotWorked, remarks, signature };
+      if (existingId) employees[idx].id = existingId;
+      await saveEmployees(employees);
+    }
+
+    modal.classList.remove('active');
+    renderEmployeeTable();
+  });
+}
+
 /* --- FORM SUBMISSION --- */
 function handleFormSubmit(e) {
   e.preventDefault();
@@ -908,19 +1065,7 @@ function handleFormSubmit(e) {
 }
 
 function editWaterEmployee(idx) {
-  const item = waterEmployees[idx];
-  document.getElementById('empName').value = item.name;
-  empPositionSelect.value = item.position;
-  empSalaryInput.value = item.salary;
-  workDaysInput.value = item.workDays;
-  document.getElementById('remarks').value = item.remarks;
-  document.getElementById('signature').value = item.signature;
-  document.getElementById('editIndex').value = idx;
-  
-  saveBtn.innerHTML = '✔️ อัปเดตข้อมูลค่าน้ำดื่ม';
-  resetBtn.classList.remove('hidden');
-  const formTitle = document.getElementById('formTitle');
-  if (formTitle) formTitle.textContent = 'แก้ไขข้อมูลผู้รับค่าน้ำดื่ม';
+  openEditModal(true, idx);
 }
 
 function deleteWaterEmployee(idx) {
@@ -971,7 +1116,7 @@ function renderEmployeeTable() {
         <td style="font-weight: 700;">${allowance.toFixed(2)} บาท</td>
         <td style="color: ${tax > 0 ? 'var(--post-red)' : 'var(--text-secondary)'}; font-weight: ${tax > 0 ? '700' : '400'};">${tax.toFixed(2)} บาท</td>
         <td style="font-weight: 800; color: var(--post-emerald);">${net.toFixed(2)} บาท</td>
-        <td style="font-style: italic; color: var(--text-secondary);">${item.signature}</td>
+        <td style="font-style: italic; color: var(--text-primary);">${item.signature}</td>
         <td class="actions-col">
           <button class="row-action-btn edit-btn" title="แก้ไข">✏️</button>
           <button class="row-action-btn delete-btn" title="ลบ">🗑️</button>
@@ -1121,7 +1266,7 @@ function renderEmployeeTable() {
       </td>
     `;
 
-    tr.querySelector('.edit-row-btn').addEventListener('click', () => loadRowToForm(row.parentIndex));
+    tr.querySelector('.edit-row-btn').addEventListener('click', () => openEditModal(false, row.parentIndex));
     tr.querySelector('.clone-row-btn').addEventListener('click', () => cloneRow(row.parentIndex));
     tr.querySelector('.delete-row-btn').addEventListener('click', () => deleteRow(row.parentIndex));
 
@@ -1726,7 +1871,7 @@ function printReport() {
       <td>${row.fuelCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
       <td>${row.maintCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
       <td><strong>${row.sumTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></td>
-      <td><span style="font-family: var(--font-title); font-style: italic; font-size: 9pt; color: #e5e5e5 !important;">${row.signature}</span></td>
+      <td><span style="font-family: var(--font-title); font-style: italic; font-size: 9pt; color: #333;">${row.signature}</span></td>
       <td><span style="font-size: 8pt; color: #444;">${row.remarks}</span></td>
     `;
     printTableBody.appendChild(tr);
