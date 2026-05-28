@@ -1,3 +1,18 @@
+import { 
+  isCloudConnected,
+  fetchEmployees,
+  saveEmployees,
+  fetchRouteData,
+  saveRouteData,
+  resetCloudRouteData,
+  fetchSavedTemplates,
+  saveTemplate,
+  deleteTemplate,
+  fetchSignatoryProfiles,
+  saveSignatoryProfile,
+  deleteSignatoryProfile
+} from './database.js';
+
 const BASE_ROUTE_DATA = {
   "20": { hasCar: false, staffDist: 1768.00, staffLiters: 71.00, workerDist: 68.0, workerLiters: 2.72 },
   "21": { hasCar: false, staffDist: 1768.00, staffLiters: 71.00, workerDist: 68.0, workerLiters: 2.72 },
@@ -218,10 +233,64 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Bind Signatory editor events
   toggleSigEditBtn.addEventListener('click', toggleSignatoryInputsLock);
+  
+  // Bind Signatory Profile Modal Events
+  const sigProfilesModal = document.getElementById('sigProfilesModal');
+  const openSigProfilesBtn = document.getElementById('openSigProfilesBtn');
+  const closeSigProfilesModalBtn = document.getElementById('closeSigProfilesModalBtn');
+  const closeSigProfilesBtn = document.getElementById('closeSigProfilesBtn');
+  const saveSigProfileBtn = document.getElementById('saveSigProfileBtn');
 
-  // Render Table
+  openSigProfilesBtn.addEventListener('click', openSigProfiles);
+  closeSigProfilesModalBtn.addEventListener('click', () => sigProfilesModal.classList.remove('active'));
+  closeSigProfilesBtn.addEventListener('click', () => sigProfilesModal.classList.remove('active'));
+  saveSigProfileBtn.addEventListener('click', handleSaveSigProfile);
+
+  // Render Table & Initial Cloud Sync
   renderEmployeeTable();
+  initCloudSync();
 });
+
+/* --- CLOUD SYNC INITIALIZER --- */
+async function initCloudSync() {
+  const badge = document.getElementById('dbStatusBadge');
+  if (!badge) return;
+
+  try {
+    if (isCloudConnected()) {
+      badge.className = 'db-status-badge connected';
+      badge.querySelector('.status-text').textContent = '🔥 เชื่อมต่อคลาวด์แล้ว';
+      
+      // Fetch cloud employees
+      const cloudEmployees = await fetchEmployees();
+      if (cloudEmployees && cloudEmployees.length > 0) {
+        employees = cloudEmployees;
+      }
+      
+      // Fetch cloud route data
+      const cloudRouteData = await fetchRouteData();
+      if (cloudRouteData) {
+        ROUTE_DATA = cloudRouteData;
+      }
+      
+      // Populate templates
+      await fetchSavedTemplates();
+      
+      // Re-populate dropdowns and re-render with cloud data
+      updateAllRouteDropdownTexts();
+      renderEmployeeTable();
+      updateTemplateSelectDropdown();
+    } else {
+      badge.className = 'db-status-badge offline';
+      badge.querySelector('.status-text').textContent = '⚠️ โหมดออฟไลน์';
+    }
+  } catch (err) {
+    console.error("Cloud connection/sync failed:", err);
+    badge.className = 'db-status-badge offline';
+    badge.querySelector('.status-text').textContent = '⚠️ โหมดออฟไลน์';
+  }
+}
+
 
 /* --- THEME TOGGLE --- */
 function toggleTheme() {
@@ -615,7 +684,7 @@ function handleFormSubmit(e) {
   }
 
   // Save state
-  localStorage.setItem('tp_employees', JSON.stringify(employees));
+  saveEmployees(employees);
   employeeForm.reset();
   routeStatsPreview.classList.add('hidden');
   tempMissions = [];
@@ -813,14 +882,14 @@ function cloneRow(index) {
   const cloned = JSON.parse(JSON.stringify(employees[index]));
   cloned.name = cloned.name + ' (สำเนา)';
   employees.push(cloned);
-  localStorage.setItem('tp_employees', JSON.stringify(employees));
+  saveEmployees(employees);
   renderEmployeeTable();
 }
 
 function deleteRow(index) {
   if (confirm('คุณต้องการลบรายชื่อพนักงานนี้ใช่หรือไม่?')) {
     employees.splice(index, 1);
-    localStorage.setItem('tp_employees', JSON.stringify(employees));
+    saveEmployees(employees);
     renderEmployeeTable();
   }
 }
@@ -842,7 +911,7 @@ function cancelEdit() {
 function clearAllData() {
   if (confirm('คุณต้องการลบข้อมูลพนักงานทั้งหมดในตารางใช่หรือไม่?')) {
     employees = [];
-    localStorage.removeItem('tp_employees');
+    saveEmployees([]);
     cancelEdit();
     renderEmployeeTable();
   }
@@ -997,7 +1066,7 @@ function loadDemoData() {
   ];
 
   employees = demoList;
-  localStorage.setItem('tp_employees', JSON.stringify(employees));
+  saveEmployees(employees);
 
   oilPricePeriods = [
     { price: 30.18, days: 9 },
@@ -1250,17 +1319,27 @@ function printReport() {
   document.getElementById('printGrandTotal').textContent = grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 });
 
   // Map signatory values onto print preview
+  const sigMakerTitleVal = document.getElementById('sigMakerTitle').value.trim() || 'ผู้จัดทำ';
   const sigMakerNameVal = document.getElementById('sigMakerName').value.trim() || '..........................................................';
   const sigMakerPosVal = document.getElementById('sigMakerPos').value.trim() || '..........................................................';
+  
+  const sigCheckerTitleVal = document.getElementById('sigCheckerTitle').value.trim() || 'ผู้ตรวจสอบ';
   const sigCheckerNameVal = document.getElementById('sigCheckerName').value.trim() || '..........................................................';
   const sigCheckerPosVal = document.getElementById('sigCheckerPos').value.trim() || '..........................................................';
+  
+  const sigApproverTitleVal = document.getElementById('sigApproverTitle').value.trim() || 'ผู้อนุมัติ';
   const sigApproverNameVal = document.getElementById('sigApproverName').value.trim() || '..........................................................';
   const sigApproverPosVal = document.getElementById('sigApproverPos').value.trim() || '..........................................................';
 
+  document.getElementById('printSigMakerTitleVal').textContent = sigMakerTitleVal;
   document.getElementById('printSigMakerNameVal').textContent = sigMakerNameVal;
   document.getElementById('printSigMakerPosVal').textContent = sigMakerPosVal;
+  
+  document.getElementById('printSigCheckerTitleVal').textContent = sigCheckerTitleVal;
   document.getElementById('printSigCheckerNameVal').textContent = sigCheckerNameVal;
   document.getElementById('printSigCheckerPosVal').textContent = sigCheckerPosVal;
+  
+  document.getElementById('printSigApproverTitleVal').textContent = sigApproverTitleVal;
   document.getElementById('printSigApproverNameVal').textContent = sigApproverNameVal;
   document.getElementById('printSigApproverPosVal').textContent = sigApproverPosVal;
 
@@ -1280,7 +1359,7 @@ function updateTemplateSelectDropdown() {
   });
 }
 
-function saveCurrentListAsTemplate() {
+async function saveCurrentListAsTemplate() {
   const name = templateNameInput.value.trim();
   if (!name) {
     alert('กรุณากรอกชื่อสำหรับบันทึกชุดรายชื่อ!');
@@ -1292,17 +1371,14 @@ function saveCurrentListAsTemplate() {
     return;
   }
 
-  const savedTemplates = JSON.parse(localStorage.getItem('tp_saved_templates')) || {};
-  savedTemplates[name] = [...employees];
-  
-  localStorage.setItem('tp_saved_templates', JSON.stringify(savedTemplates));
+  await saveTemplate(name, employees);
   templateNameInput.value = '';
   
   updateTemplateSelectDropdown();
   alert(`บันทึกชุดรายชื่อ "${name}" เรียบร้อยแล้ว!`);
 }
 
-function loadSelectedTemplate() {
+async function loadSelectedTemplate() {
   const selectedName = templateSelect.value;
   if (!selectedName) {
     alert('กรุณาเลือกชุดรายชื่อที่ต้องการโหลด!');
@@ -1315,7 +1391,7 @@ function loadSelectedTemplate() {
   if (list) {
     if (confirm(`คุณต้องการโหลดชุดรายชื่อ "${selectedName}" มาเขียนทับตารางปัจจุบันใช่หรือไม่?`)) {
       employees = JSON.parse(JSON.stringify(list));
-      localStorage.setItem('tp_employees', JSON.stringify(employees));
+      await saveEmployees(employees);
       cancelEdit();
       renderEmployeeTable();
       alert(`โหลดชุดรายชื่อ "${selectedName}" สำเร็จ!`);
@@ -1323,7 +1399,7 @@ function loadSelectedTemplate() {
   }
 }
 
-function deleteSelectedTemplate() {
+async function deleteSelectedTemplate() {
   const selectedName = templateSelect.value;
   if (!selectedName) {
     alert('กรุณาเลือกชุดรายชื่อที่ต้องการลบ!');
@@ -1331,10 +1407,7 @@ function deleteSelectedTemplate() {
   }
 
   if (confirm(`คุณต้องการลบชุดรายชื่อ "${selectedName}" ใช่หรือไม่?`)) {
-    const savedTemplates = JSON.parse(localStorage.getItem('tp_saved_templates')) || {};
-    delete savedTemplates[selectedName];
-    
-    localStorage.setItem('tp_saved_templates', JSON.stringify(savedTemplates));
+    await deleteTemplate(selectedName);
     updateTemplateSelectDropdown();
     alert(`ลบชุดรายชื่อ "${selectedName}" เรียบร้อยแล้ว!`);
   }
@@ -1359,7 +1432,7 @@ function loadSelectedRouteToEditorForm() {
   routeHasCarSelect.value = routeInfo.hasCar.toString();
 }
 
-function saveSingleRouteSettings() {
+async function saveSingleRouteSettings() {
   const route = editRouteSelect.value;
   if (!route) return;
 
@@ -1377,7 +1450,7 @@ function saveSingleRouteSettings() {
     staffLiters
   };
 
-  localStorage.setItem('tp_route_data', JSON.stringify(ROUTE_DATA));
+  await saveRouteData(ROUTE_DATA);
   
   // Re-render table and dropdown descriptions
   updateAllRouteDropdownTexts();
@@ -1436,10 +1509,11 @@ function renderRouteEditorTable() {
   });
 }
 
-function resetRouteDataDefaults() {
+async function resetRouteDataDefaults() {
   if (confirm('คุณแน่ใจหรือไม่ว่าต้องการรีเซ็ตสถิติด้านจ่ายอ้างอิงทั้งหมดกลับไปเป็นค่าเริ่มต้นจากโรงงาน?')) {
+    await resetCloudRouteData();
     ROUTE_DATA = initRouteData();
-    localStorage.removeItem('tp_route_data');
+    await saveRouteData(ROUTE_DATA);
     updateAllRouteDropdownTexts();
     renderRouteEditorTable();
     loadSelectedRouteToEditorForm();
@@ -1451,10 +1525,13 @@ function resetRouteDataDefaults() {
 /* --- SIGNATORY INPUTS LOCK/UNLOCK TOGGLE --- */
 function toggleSignatoryInputsLock() {
   const inputs = [
+    document.getElementById('sigMakerTitle'),
     document.getElementById('sigMakerName'),
     document.getElementById('sigMakerPos'),
+    document.getElementById('sigCheckerTitle'),
     document.getElementById('sigCheckerName'),
     document.getElementById('sigCheckerPos'),
+    document.getElementById('sigApproverTitle'),
     document.getElementById('sigApproverName'),
     document.getElementById('sigApproverPos')
   ];
@@ -1467,7 +1544,7 @@ function toggleSignatoryInputsLock() {
     toggleSigEditBtn.innerHTML = '🔒 ล็อกผู้ลงนาม';
     toggleSigEditBtn.style.background = 'var(--post-orange)';
     toggleSigEditBtn.style.color = '#fff';
-    inputs[0].focus();
+    inputs[1].focus(); // Focus on the maker's name field
   } else {
     // Lock all inputs
     inputs.forEach(input => input.disabled = true);
@@ -1476,3 +1553,111 @@ function toggleSignatoryInputsLock() {
     toggleSigEditBtn.style.color = 'var(--post-orange)';
   }
 }
+
+/* --- SIGNATORY PROFILE MANAGER LOGIC --- */
+async function openSigProfiles() {
+  const sigProfilesModal = document.getElementById('sigProfilesModal');
+  sigProfilesModal.classList.add('active');
+  await renderSigProfilesTable();
+}
+
+async function renderSigProfilesTable() {
+  const sigProfilesTableBody = document.getElementById('sigProfilesTableBody');
+  sigProfilesTableBody.innerHTML = '<tr><td colspan="3" class="no-data">กำลังโหลดข้อมูล...</td></tr>';
+  
+  const profiles = await fetchSignatoryProfiles();
+  sigProfilesTableBody.innerHTML = '';
+  
+  const keys = Object.keys(profiles);
+  if (keys.length === 0) {
+    sigProfilesTableBody.innerHTML = '<tr><td colspan="3" class="no-data">ยังไม่มีเทมเพลตผู้ลงนาม</td></tr>';
+    return;
+  }
+  
+  keys.forEach(name => {
+    const p = profiles[name];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${name}</strong></td>
+      <td style="font-size: 0.8rem; text-align: left !important; line-height: 1.4; color: var(--text-primary);">
+        <div><strong>${p.makerTitle || 'ผู้จัดทำ'}:</strong> ${p.makerName} (${p.makerPos})</div>
+        <div><strong>${p.checkerTitle || 'ผู้ตรวจสอบ'}:</strong> ${p.checkerName || '-'} (${p.checkerPos || '-'})</div>
+        <div><strong>${p.approverTitle || 'ผู้อนุมัติ'}:</strong> ${p.approverName || '-'} (${p.approverPos || '-'})</div>
+      </td>
+      <td>
+        <div style="display: flex; gap: 0.25rem; justify-content: center;">
+          <button type="button" class="btn btn-primary btn-small load-profile-btn" style="padding: 0.15rem 0.35rem; font-size: 0.75rem;">โหลด</button>
+          <button type="button" class="btn btn-danger btn-small delete-profile-btn" style="padding: 0.15rem 0.35rem; font-size: 0.75rem;">ลบ</button>
+        </div>
+      </td>
+    `;
+    
+    tr.querySelector('.load-profile-btn').addEventListener('click', () => {
+      document.getElementById('sigMakerTitle').value = p.makerTitle || 'ผู้จัดทำ';
+      document.getElementById('sigMakerName').value = p.makerName || '';
+      document.getElementById('sigMakerPos').value = p.makerPos || '';
+      
+      document.getElementById('sigCheckerTitle').value = p.checkerTitle || 'ผู้ตรวจสอบ';
+      document.getElementById('sigCheckerName').value = p.checkerName || '';
+      document.getElementById('sigCheckerPos').value = p.checkerPos || '';
+      
+      document.getElementById('sigApproverTitle').value = p.approverTitle || 'ผู้อนุมัติ';
+      document.getElementById('sigApproverName').value = p.approverName || '';
+      document.getElementById('sigApproverPos').value = p.approverPos || '';
+      
+      const sigProfilesModal = document.getElementById('sigProfilesModal');
+      sigProfilesModal.classList.remove('active');
+      alert(`โหลดชุดผู้ลงนาม "${name}" สำเร็จ!`);
+    });
+    
+    tr.querySelector('.delete-profile-btn').addEventListener('click', async () => {
+      if (confirm(`คุณต้องการลบเทมเพลตผู้ลงนาม "${name}" ใช่หรือไม่?`)) {
+        await deleteSignatoryProfile(name);
+        await renderSigProfilesTable();
+        alert(`ลบเทมเพลต "${name}" สำเร็จ!`);
+      }
+    });
+    
+    sigProfilesTableBody.appendChild(tr);
+  });
+}
+
+async function handleSaveSigProfile() {
+  const profileName = document.getElementById('sigProfileNameInput').value.trim();
+  if (!profileName) {
+    alert('กรุณากรอกชื่อโปรไฟล์เทมเพลต!');
+    return;
+  }
+  
+  const profileData = {
+    makerTitle: document.getElementById('modalSigMakerTitle').value.trim() || 'ผู้จัดทำ',
+    makerName: document.getElementById('modalSigMakerName').value.trim(),
+    makerPos: document.getElementById('modalSigMakerPos').value.trim(),
+    
+    checkerTitle: document.getElementById('modalSigCheckerTitle').value.trim() || 'ผู้ตรวจสอบ',
+    checkerName: document.getElementById('modalSigCheckerName').value.trim(),
+    checkerPos: document.getElementById('modalSigCheckerPos').value.trim(),
+    
+    approverTitle: document.getElementById('modalSigApproverTitle').value.trim() || 'ผู้อนุมัติ',
+    approverName: document.getElementById('modalSigApproverName').value.trim(),
+    approverPos: document.getElementById('modalSigApproverPos').value.trim()
+  };
+  
+  if (!profileData.makerName) {
+    alert('กรุณากรอกชื่อผู้จัดทำเป็นอย่างน้อย!');
+    return;
+  }
+  
+  await saveSignatoryProfile(profileName, profileData);
+  document.getElementById('sigProfileNameInput').value = '';
+  document.getElementById('modalSigMakerName').value = '';
+  document.getElementById('modalSigMakerPos').value = '';
+  document.getElementById('modalSigCheckerName').value = '';
+  document.getElementById('modalSigCheckerPos').value = '';
+  document.getElementById('modalSigApproverName').value = '';
+  document.getElementById('modalSigApproverPos').value = '';
+  
+  await renderSigProfilesTable();
+  alert(`บันทึกโปรไฟล์ "${profileName}" สำเร็จ!`);
+}
+

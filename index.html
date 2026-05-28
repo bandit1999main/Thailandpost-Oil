@@ -36,6 +36,10 @@
           </div>
         </div>
         <div class="header-controls">
+          <div id="dbStatusBadge" class="db-status-badge connecting">
+            <span class="status-dot"></span>
+            <span class="status-text">Connecting to cloud...</span>
+          </div>
           <button id="themeToggleBtn" class="btn btn-icon" aria-label="Toggle Dark/Light Mode">
             <svg id="sunIcon" class="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
             <svg id="moonIcon" class="theme-icon hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -107,29 +111,35 @@
                 <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--text-highlight); margin: 0; display: flex; align-items: center; gap: 0.4rem;">
                   <span>✍️ ผู้ลงนามในรายงาน (PDF)</span>
                 </h4>
-                <button type="button" id="toggleSigEditBtn" class="btn btn-secondary btn-small" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border: 1px solid var(--post-orange); color: var(--post-orange); background: transparent;">✏️ แก้ไขผู้ลงนาม</button>
+                <div style="display: flex; gap: 0.4rem;">
+                  <button type="button" id="openSigProfilesBtn" class="btn btn-secondary btn-small" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border: 1px solid var(--post-orange); color: var(--post-orange); background: transparent;">📂 เทมเพลตผู้ลงนาม</button>
+                  <button type="button" id="toggleSigEditBtn" class="btn btn-secondary btn-small" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; border: 1px solid var(--post-orange); color: var(--post-orange); background: transparent;">✏️ แก้ไขผู้ลงนาม</button>
+                </div>
               </div>
               
               <div class="form-group">
-                <label>ผู้จัดทำ (ชื่อ / ตำแหน่ง)</label>
-                <div class="form-row-2">
-                  <input type="text" id="sigMakerName" class="form-input" value="นายนิพล ทรัพย์หมื่นแสน" placeholder="ชื่อผู้จัดทำ" disabled />
+                <label>ผู้จัดทำ (บทบาท / ชื่อ / ตำแหน่ง)</label>
+                <div style="display: grid; grid-template-columns: 1.2fr 2fr 2fr; gap: 0.5rem;">
+                  <input type="text" id="sigMakerTitle" class="form-input" value="ผู้จัดทำ" placeholder="บทบาท (เช่น ผู้จัดทำ)" disabled />
+                  <input type="text" id="sigMakerName" class="form-input" value="นายนิพล ทรัพย์หมื่นแสน" placeholder="ชื่อ" disabled />
                   <input type="text" id="sigMakerPos" class="form-input" value="หัวหน้าทำการ" placeholder="ตำแหน่ง" disabled />
                 </div>
               </div>
 
               <div class="form-group">
-                <label>ผู้ตรวจสอบ (ชื่อ / ตำแหน่ง)</label>
-                <div class="form-row-2">
-                  <input type="text" id="sigCheckerName" class="form-input" value="" placeholder="ชื่อผู้ตรวจสอบ (ปล่อยว่างได้)" disabled />
+                <label>ผู้ตรวจสอบ (บทบาท / ชื่อ / ตำแหน่ง)</label>
+                <div style="display: grid; grid-template-columns: 1.2fr 2fr 2fr; gap: 0.5rem;">
+                  <input type="text" id="sigCheckerTitle" class="form-input" value="ผู้ตรวจสอบ" placeholder="บทบาท (เช่น ผู้ตรวจสอบ)" disabled />
+                  <input type="text" id="sigCheckerName" class="form-input" value="" placeholder="ชื่อ" disabled />
                   <input type="text" id="sigCheckerPos" class="form-input" value="หน.สพ./ปจ." placeholder="ตำแหน่ง" disabled />
                 </div>
               </div>
 
               <div class="form-group" style="margin-bottom: 0;">
-                <label>ผู้อนุมัติ (ชื่อ / ตำแหน่ง)</label>
-                <div class="form-row-2">
-                  <input type="text" id="sigApproverName" class="form-input" value="" placeholder="ชื่อผู้อนุมัติ (ปล่อยว่างได้)" disabled />
+                <label>ผู้อนุมัติ (บทบาท / ชื่อ / ตำแหน่ง)</label>
+                <div style="display: grid; grid-template-columns: 1.2fr 2fr 2fr; gap: 0.5rem;">
+                  <input type="text" id="sigApproverTitle" class="form-input" value="ผู้อนุมัติ" placeholder="บทบาท (เช่น ผู้อนุมัติ)" disabled />
+                  <input type="text" id="sigApproverName" class="form-input" value="" placeholder="ชื่อ" disabled />
                   <input type="text" id="sigApproverPos" class="form-input" value="ผู้จัดการฝ่าย" placeholder="ตำแหน่ง" disabled />
                 </div>
               </div>
@@ -563,6 +573,91 @@
       </div>
     </div>
 
+    <!-- Modal: Signatory Profile Manager -->
+    <div id="sigProfilesModal" class="modal-overlay">
+      <div class="modal-content glass-modal animate-slide-in" style="max-width: 900px;">
+        <div class="modal-header">
+          <h3>📂 จัดการเทมเพลตผู้ลงนาม (Signatory Templates)</h3>
+          <button type="button" id="closeSigProfilesModalBtn" class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-instruction">
+            บันทึก แก้ไข หรือเลือกสลับชุดผู้ลงนามตามโครงสร้างสาขา/แผนก เพื่อใช้จัดพิมพ์รายงานการเบิกเงินอย่างยืดหยุ่น
+          </p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <!-- LEFT COLUMN: Form to Save/Edit Signatories -->
+            <div style="background: rgba(0, 0, 0, 0.03); border: 1px solid var(--border-glass); border-radius: var(--radius-small); padding: 1.25rem;">
+              <div style="font-weight: 700; color: var(--text-highlight); margin-bottom: 0.75rem; font-size: 0.95rem;">📥 บันทึกชุดผู้ลงนามใหม่</div>
+              
+              <div class="form-group">
+                <label for="sigProfileNameInput">ชื่อโปรไฟล์เทมเพลต</label>
+                <input type="text" id="sigProfileNameInput" class="form-input" placeholder="เช่น ฝ่ายนำจ่าย แผนก 1" />
+              </div>
+
+              <!-- Maker Inputs -->
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label style="color: var(--post-orange); font-weight: 700;">✍️ ชุดที่ 1: ผู้จัดทำ</label>
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr 1.5fr; gap: 0.4rem; margin-top: 0.25rem;">
+                  <input type="text" id="modalSigMakerTitle" class="form-input" placeholder="บทบาท" value="ผู้จัดทำ" />
+                  <input type="text" id="modalSigMakerName" class="form-input" placeholder="ชื่อ-นามสกุล" />
+                  <input type="text" id="modalSigMakerPos" class="form-input" placeholder="ตำแหน่ง" />
+                </div>
+              </div>
+
+              <!-- Checker Inputs -->
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label style="color: var(--post-orange); font-weight: 700;">✍️ ชุดที่ 2: ผู้ตรวจสอบ</label>
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr 1.5fr; gap: 0.4rem; margin-top: 0.25rem;">
+                  <input type="text" id="modalSigCheckerTitle" class="form-input" placeholder="บทบาท" value="ผู้ตรวจสอบ" />
+                  <input type="text" id="modalSigCheckerName" class="form-input" placeholder="ชื่อ-นามสกุล" />
+                  <input type="text" id="modalSigCheckerPos" class="form-input" placeholder="ตำแหน่ง" />
+                </div>
+              </div>
+
+              <!-- Approver Inputs -->
+              <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label style="color: var(--post-orange); font-weight: 700;">✍️ ภารกิจย่อยที่ 3: ผู้อนุมัติ</label>
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr 1.5fr; gap: 0.4rem; margin-top: 0.25rem;">
+                  <input type="text" id="modalSigApproverTitle" class="form-input" placeholder="บทบาท" value="ผู้อนุมัติ" />
+                  <input type="text" id="modalSigApproverName" class="form-input" placeholder="ชื่อ-นามสกุล" />
+                  <input type="text" id="modalSigApproverPos" class="form-input" placeholder="ตำแหน่ง" />
+                </div>
+              </div>
+
+              <button type="button" id="saveSigProfileBtn" class="btn btn-primary" style="width: 100%;">
+                📥 บันทึกเป็นเทมเพลตผู้ลงนาม
+              </button>
+            </div>
+
+            <!-- RIGHT COLUMN: Saved Profiles List -->
+            <div>
+              <div style="font-weight: 700; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-highlight);">📋 รายการเทมเพลตผู้ลงนามบนคลาวด์</div>
+              
+              <div class="modal-table-container" style="max-height: 400px; border: 1px solid var(--border-glass); border-radius: var(--radius-small);">
+                <table class="modal-table">
+                  <thead>
+                    <tr>
+                      <th>ชื่อโปรไฟล์</th>
+                      <th>รายละเอียดผู้ลงนาม</th>
+                      <th>การจัดการ</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sigProfilesTableBody">
+                    <!-- Rendered dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="closeSigProfilesBtn" class="btn btn-secondary btn-small">ปิดหน้าต่าง</button>
+        </div>
+      </div>
+    </div>
+
+
     <!-- Printable Official Report Layout (Hidden on Screen, Visible on Print) -->
     <div id="printReportArea" class="print-only">
       <div class="print-header">
@@ -608,17 +703,17 @@
 
       <div class="print-signatures">
         <div class="sig-box">
-          <p>ลงชื่อ..........................................................ผู้จัดทำ</p>
+          <p>ลงชื่อ..........................................................<span id="printSigMakerTitleVal">ผู้จัดทำ</span></p>
           <p style="margin-top: 0.5rem;">(<span id="printSigMakerNameVal">..........................................................</span>)</p>
           <p>ตำแหน่ง <span id="printSigMakerPosVal">..........................................................</span></p>
         </div>
         <div class="sig-box">
-          <p>ลงชื่อ..........................................................ผู้ตรวจสอบ</p>
+          <p>ลงชื่อ..........................................................<span id="printSigCheckerTitleVal">ผู้ตรวจสอบ</span></p>
           <p style="margin-top: 0.5rem;">(<span id="printSigCheckerNameVal">..........................................................</span>)</p>
           <p>ตำแหน่ง <span id="printSigCheckerPosVal">..........................................................</span></p>
         </div>
         <div class="sig-box">
-          <p>ลงชื่อ..........................................................ผู้อนุมัติ</p>
+          <p>ลงชื่อ..........................................................<span id="printSigApproverTitleVal">ผู้อนุมัติ</span></p>
           <p style="margin-top: 0.5rem;">(<span id="printSigApproverNameVal">..........................................................</span>)</p>
           <p>ตำแหน่ง <span id="printSigApproverPosVal">..........................................................</span></p>
         </div>
