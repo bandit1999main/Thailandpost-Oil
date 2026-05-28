@@ -383,6 +383,8 @@ async function switchAppMode(mode) {
     document.getElementById('workDaysRow').classList.remove('hidden');
     document.getElementById('daysNotWorkedGroup').classList.remove('hidden');
     salaryGroup.classList.add('hidden');
+    // Restore required on route select for fuel mode form validation
+    deliveryRouteSelect.setAttribute('required', 'true');
     
     // Reset position dropdown to standard
     empPositionSelect.innerHTML = `
@@ -437,6 +439,8 @@ async function switchAppMode(mode) {
     supervisorMissionSection.classList.add('hidden');
     routeStatsPreview.classList.add('hidden');
     salaryGroup.classList.remove('hidden');
+    // CRITICAL: Remove required from hidden route select so water form can submit
+    deliveryRouteSelect.removeAttribute('required');
     
     // Populate position select with specific drinking water claimable roles (Image 2)
     empPositionSelect.innerHTML = `
@@ -1752,7 +1756,8 @@ function printReport() {
     document.getElementById('printSigApproverNameValWater').textContent = sigApproverNameVal;
     document.getElementById('printSigApproverPosValWater').textContent = sigApproverPosVal;
     
-    window.print();
+    // Give browser 300ms to render print layout before opening dialog
+    setTimeout(() => window.print(), 300);
     return;
   }
 
@@ -1907,7 +1912,8 @@ function printReport() {
   document.getElementById('printSigApproverNameVal').textContent = sigApproverNameVal;
   document.getElementById('printSigApproverPosVal').textContent = sigApproverPosVal;
 
-  window.print();
+  // Give browser 300ms to render print layout before opening dialog
+  setTimeout(() => window.print(), 300);
 }
 
 /* --- SAVED TEMPLATES / BATCH MANAGER LOGIC --- */
