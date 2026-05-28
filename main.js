@@ -621,12 +621,13 @@ function renderEmployeeTable() {
     // Build description strings for the table
     let routeDesc = '';
     if (item.formMode === 'supervisor') {
-      routeDesc = item.missions.map(m => {
+      const mapped = item.missions.map(m => {
         if (m.type === 'ตรวจสอบการนำจ่าย') {
           return 'ตรวจสอบการนำจ่าย';
         }
         return `${m.type} (ด้าน ${m.route} / ${m.days} วัน)`;
-      }).join(', ');
+      });
+      routeDesc = [...new Set(mapped)].join(', ');
     } else {
       routeDesc = `ด้านจ่ายที่ ${item.route}`;
     }
@@ -919,12 +920,13 @@ function exportToCsv() {
 
     let routeDesc = '';
     if (item.formMode === 'supervisor') {
-      routeDesc = item.missions.map(m => {
+      const mapped = item.missions.map(m => {
         if (m.type === 'ตรวจสอบการนำจ่าย') {
           return 'ตรวจสอบการนำจ่าย';
         }
         return `${m.type} (ด้าน ${m.route} / ${m.days} วัน)`;
-      }).join('; ');
+      });
+      routeDesc = [...new Set(mapped)].join('; ');
     } else {
       routeDesc = `ด้านจ่ายที่ ${item.route}`;
     }
@@ -978,12 +980,13 @@ function printReport() {
 
     let routeDesc = '';
     if (item.formMode === 'supervisor') {
-      routeDesc = item.missions.map(m => {
+      const mapped = item.missions.map(m => {
         if (m.type === 'ตรวจสอบการนำจ่าย') {
           return 'ตรวจสอบการนำจ่าย';
         }
         return `${m.type} (ด้าน ${m.route} / ${m.days} วัน)`;
-      }).join('<br>');
+      });
+      routeDesc = [...new Set(mapped)].join('<br>');
     } else {
       routeDesc = `ด้านจ่ายที่ ${item.route}`;
     }
