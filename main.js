@@ -22,21 +22,24 @@ const BASE_ROUTE_DATA = {
   "40": { hasCar: true, staffDist: 1981.20, staffLiters: 199.00, workerDist: 76.2, workerLiters: 7.62 }
 };
 
-// Generate routes 1 to 19 dynamically
-const ROUTE_DATA = {};
-for (let i = 1; i <= 19; i++) {
-  const dailyDist = 48 + i; // linear from 49km (i=1) to 67km (i=19)
-  const staffDist = dailyDist * 26;
-  ROUTE_DATA[i.toString()] = {
-    hasCar: false,
-    staffDist: staffDist,
-    staffLiters: Math.ceil(staffDist / 25),
-    workerDist: dailyDist,
-    workerLiters: Number((dailyDist / 25).toFixed(2))
-  };
+function initRouteData() {
+  const data = {};
+  for (let i = 1; i <= 19; i++) {
+    const dailyDist = 48 + i;
+    const staffDist = dailyDist * 26;
+    data[i.toString()] = {
+      hasCar: false,
+      staffDist: staffDist,
+      staffLiters: Math.ceil(staffDist / 25),
+      workerDist: dailyDist,
+      workerLiters: Number((dailyDist / 25).toFixed(2))
+    };
+  }
+  Object.assign(data, BASE_ROUTE_DATA);
+  return data;
 }
-// Merge with 20 to 40
-Object.assign(ROUTE_DATA, BASE_ROUTE_DATA);
+
+let ROUTE_DATA = JSON.parse(localStorage.getItem('tp_route_data')) || initRouteData();
 
 // State Store
 let employees = JSON.parse(localStorage.getItem('tp_employees')) || [];
@@ -119,6 +122,21 @@ const templateSelect = document.getElementById('templateSelect');
 const loadTemplateBtn = document.getElementById('loadTemplateBtn');
 const deleteTemplateBtn = document.getElementById('deleteTemplateBtn');
 
+// Route Editor Modal DOM Elements
+const routeEditorModal = document.getElementById('routeEditorModal');
+const openRouteEditorBtn = document.getElementById('openRouteEditorBtn');
+const closeRouteEditorModalBtn = document.getElementById('closeRouteEditorModalBtn');
+const closeRouteEditorBtn = document.getElementById('closeRouteEditorBtn');
+const editRouteSelect = document.getElementById('editRouteSelect');
+const routeDistDayInput = document.getElementById('routeDistDay');
+const routeFuelDayInput = document.getElementById('routeFuelDay');
+const routeDistMonthInput = document.getElementById('routeDistMonth');
+const routeFuelMonthInput = document.getElementById('routeFuelMonth');
+const routeHasCarSelect = document.getElementById('routeHasCar');
+const saveSingleRouteBtn = document.getElementById('saveSingleRouteBtn');
+const resetAllRoutesBtn = document.getElementById('resetAllRoutesBtn');
+const routeEditorTableBody = document.getElementById('routeEditorTableBody');
+
 /* --- INITIALIZATION --- */
 document.addEventListener('DOMContentLoaded', () => {
   // Populate Route Dropdowns
@@ -180,6 +198,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Setup live changes
   globalFuelPriceInput.addEventListener('change', recalculateTableCosts);
+
+  // Populate Route Editor Dropdown
+  Object.keys(ROUTE_DATA).forEach(route => {
+    const opt = document.createElement('option');
+    opt.value = route;
+    opt.textContent = `ด้านจ่ายที่ ${route}`;
+    editRouteSelect.appendChild(opt);
+  });
+
+  // Bind Route Editor Events
+  openRouteEditorBtn.addEventListener('click', openRouteEditor);
+  closeRouteEditorModalBtn.addEventListener('click', () => routeEditorModal.classList.remove('active'));
+  closeRouteEditorBtn.addEventListener('click', () => routeEditorModal.classList.remove('active'));
+  editRouteSelect.addEventListener('change', loadSelectedRouteToEditorForm);
+  saveSingleRouteBtn.addEventListener('click', saveSingleRouteSettings);
+  resetAllRoutesBtn.addEventListener('click', resetRouteDataDefaults);
 
   // Render Table
   renderEmployeeTable();
@@ -261,13 +295,13 @@ function addSupervisorMission() {
 
   if (type === 'ตรวจสอบการนำจ่าย') {
     // 1/2 of standard daily distance
-    distance = (route.workerDist / 2) * days;
+    distance = (routeInfo.workerDist / 2) * days;
     // liters = (1/2 distance) / 20 km/liter
-    liters = Number(((route.workerDist / 2) / 20 * days).toFixed(2));
+    liters = Number(((routeInfo.workerDist / 2) / 20 * days).toFixed(2));
   } else {
     // Substitute or Training gets full route daily rates
-    distance = route.workerDist * days;
-    liters = Number((route.workerLiters * days).toFixed(2));
+    distance = routeInfo.workerDist * days;
+    liters = Number((routeInfo.workerLiters * days).toFixed(2));
   }
 
   tempMissions.push({
@@ -1045,5 +1079,113 @@ function deleteSelectedTemplate() {
     localStorage.setItem('tp_saved_templates', JSON.stringify(savedTemplates));
     updateTemplateSelectDropdown();
     alert(`ลบชุดรายชื่อ "${selectedName}" เรียบร้อยแล้ว!`);
+  }
+}
+
+/* --- REFERENCE ROUTE DATA EDITOR MODAL FUNCTIONS --- */
+function openRouteEditor() {
+  routeEditorModal.classList.add('active');
+  renderRouteEditorTable();
+  loadSelectedRouteToEditorForm();
+}
+
+function loadSelectedRouteToEditorForm() {
+  const route = editRouteSelect.value;
+  if (!route) return;
+
+  const routeInfo = ROUTE_DATA[route];
+  routeDistDayInput.value = routeInfo.workerDist;
+  routeFuelDayInput.value = routeInfo.workerLiters;
+  routeDistMonthInput.value = routeInfo.staffDist;
+  routeFuelMonthInput.value = routeInfo.staffLiters;
+  routeHasCarSelect.value = routeInfo.hasCar.toString();
+}
+
+function saveSingleRouteSettings() {
+  const route = editRouteSelect.value;
+  if (!route) return;
+
+  const workerDist = parseFloat(routeDistDayInput.value) || 0;
+  const workerLiters = parseFloat(routeFuelDayInput.value) || 0;
+  const staffDist = parseFloat(routeDistMonthInput.value) || 0;
+  const staffLiters = parseFloat(routeFuelMonthInput.value) || 0;
+  const hasCar = routeHasCarSelect.value === 'true';
+
+  ROUTE_DATA[route] = {
+    hasCar,
+    workerDist,
+    workerLiters,
+    staffDist,
+    staffLiters
+  };
+
+  localStorage.setItem('tp_route_data', JSON.stringify(ROUTE_DATA));
+  
+  // Re-render table and dropdown descriptions
+  updateAllRouteDropdownTexts();
+  renderRouteEditorTable();
+  renderEmployeeTable();
+  
+  alert(`อัปเดตข้อมูลด้านจ่ายที่ ${route} สำเร็จ!`);
+}
+
+function updateAllRouteDropdownTexts() {
+  const currentVal1 = deliveryRouteSelect.value;
+  const currentVal2 = missionRouteSelect.value;
+
+  deliveryRouteSelect.innerHTML = '<option value="" disabled selected>-- เลือกด้านจ่าย --</option>';
+  missionRouteSelect.innerHTML = '<option value="" disabled selected>-- เลือกด้านจ่าย --</option>';
+
+  Object.keys(ROUTE_DATA).forEach(route => {
+    const text = `ด้านจ่ายที่ ${route}${ROUTE_DATA[route].hasCar ? ' (รถยนต์)' : ''}`;
+    
+    const opt1 = document.createElement('option');
+    opt1.value = route;
+    opt1.textContent = text;
+    deliveryRouteSelect.appendChild(opt1);
+
+    const opt2 = document.createElement('option');
+    opt2.value = route;
+    opt2.textContent = text;
+    missionRouteSelect.appendChild(opt2);
+  });
+
+  deliveryRouteSelect.value = currentVal1;
+  missionRouteSelect.value = currentVal2;
+}
+
+function renderRouteEditorTable() {
+  routeEditorTableBody.innerHTML = '';
+  Object.keys(ROUTE_DATA).forEach(route => {
+    const info = ROUTE_DATA[route];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${route}</strong></td>
+      <td><span class="badge ${info.hasCar ? 'position-พนักงาน' : 'position-ลูกจ้าง'}">${info.hasCar ? '🚗 รถยนต์' : '🏍️ จักรยานยนต์'}</span></td>
+      <td>${info.workerDist.toFixed(1)} กม.</td>
+      <td>${info.workerLiters.toFixed(2)} ลิตร</td>
+      <td>${info.staffDist.toLocaleString()} กม.</td>
+      <td>${info.staffLiters.toLocaleString()} ลิตร</td>
+      <td><button type="button" class="btn btn-secondary btn-small select-route-btn" style="padding: 0.15rem 0.35rem; font-size: 0.75rem;">แก้ไข</button></td>
+    `;
+
+    tr.querySelector('.select-route-btn').addEventListener('click', () => {
+      editRouteSelect.value = route;
+      loadSelectedRouteToEditorForm();
+    });
+
+    routeEditorTableBody.appendChild(tr);
+  });
+}
+
+function resetRouteDataDefaults() {
+  if (confirm('คุณแน่ใจหรือไม่ว่าต้องการรีเซ็ตสถิติด้านจ่ายอ้างอิงทั้งหมดกลับไปเป็นค่าเริ่มต้นจากโรงงาน?')) {
+    ROUTE_DATA = initRouteData();
+    localStorage.removeItem('tp_route_data');
+    updateAllRouteDropdownTexts();
+    renderRouteEditorTable();
+    loadSelectedRouteToEditorForm();
+    renderEmployeeTable();
+    alert('รีเซ็ตข้อมูลด้านจ่ายทั้งหมดเรียบร้อยแล้ว!');
   }
 }

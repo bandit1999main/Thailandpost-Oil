@@ -339,6 +339,9 @@
                 <h3>รายการพนักงานเบิกจ่ายค่าน้ำมันค้างจ่ายประจำ ปณ.</h3>
               </div>
               <div class="header-actions-flex">
+                <button type="button" id="openRouteEditorBtn" class="btn btn-secondary btn-small" style="border: 1px solid var(--post-orange); color: var(--post-orange);">
+                  ⚙️ ตั้งค่าระยะทาง/น้ำมัน
+                </button>
                 <button type="button" id="loadDemoBtn" class="btn btn-secondary btn-small">
                   🌟 โหลดข้อมูลตัวอย่าง
                 </button>
@@ -469,6 +472,90 @@
           <button type="button" id="applyAvgPriceBtn" class="btn btn-primary" disabled>
             ✔️ นำราคานี้ไปใช้เป็นค่าราคากลาง
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Reference Route Data Editor (1 - 40) -->
+    <div id="routeEditorModal" class="modal-overlay">
+      <div class="modal-content glass-modal animate-slide-in" style="max-width: 800px;">
+        <div class="modal-header">
+          <h3>⚙️ แก้ไขตารางสถิติด้านจ่ายอ้างอิง (ด้านที่ 1 - 40)</h3>
+          <button type="button" id="closeRouteEditorModalBtn" class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-instruction">
+            แก้ไขระยะทางและปริมาณน้ำมันอ้างอิงสำหรับพนักงาน (รายเดือน) และลูกจ้าง (รายวัน) ข้อมูลนี้จะถูกบันทึกเพื่อใช้เป็นฐานข้อมูลในการคำนวณเบิกจ่ายของทุกรายชื่อ
+          </p>
+
+          <!-- Edit Form -->
+          <div style="background: rgba(0, 0, 0, 0.03); border: 1px solid var(--border-glass); border-radius: var(--radius-small); padding: 1.25rem; margin-bottom: 1.25rem;">
+            <div style="font-weight: 700; color: var(--text-highlight); margin-bottom: 0.75rem; font-size: 0.95rem;">✏️ ฟอร์มแก้ไขข้อมูลด้านจ่าย</div>
+            
+            <div class="form-row-3" style="grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div class="form-group">
+                <label for="editRouteSelect">เลือกด้านจ่ายที่ต้องการแก้</label>
+                <select id="editRouteSelect" class="form-select">
+                  <!-- Loaded via JS -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="routeDistDay">ระยะทางต่อวัน (กิโลเมตร)</label>
+                <input type="number" id="routeDistDay" class="form-input" step="0.01" value="0" />
+              </div>
+              <div class="form-group">
+                <label for="routeFuelDay">น้ำมันต่อวัน (ลิตร)</label>
+                <input type="number" id="routeFuelDay" class="form-input" step="0.01" value="0" />
+              </div>
+            </div>
+
+            <div class="form-row-3" style="grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div class="form-group">
+                <label for="routeDistMonth">ระยะทางต่อเดือน (กิโลเมตร)</label>
+                <input type="number" id="routeDistMonth" class="form-input" step="0.01" value="0" />
+              </div>
+              <div class="form-group">
+                <label for="routeFuelMonth">น้ำมันต่อเดือน (ลิตร)</label>
+                <input type="number" id="routeFuelMonth" class="form-input" step="0.01" value="0" />
+              </div>
+              <div class="form-group">
+                <label for="routeHasCar">ประเภทพาหนะหลัก</label>
+                <select id="routeHasCar" class="form-select">
+                  <option value="false">รถจักรยานยนต์ / อื่นๆ</option>
+                  <option value="true">รถยนต์ (บำรุง 2.25 บ./กม.)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem;">
+              <button type="button" id="saveSingleRouteBtn" class="btn btn-primary btn-small">✔️ อัปเดตด้านจ่ายนี้</button>
+            </div>
+          </div>
+
+          <!-- All Routes Scrollable Table -->
+          <div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 0.9rem;">📋 ตารางข้อมูลด้านจ่ายปัจจุบัน (1 - 40)</div>
+          <div class="modal-table-container" style="max-height: 250px;">
+            <table class="modal-table">
+              <thead>
+                <tr>
+                  <th>ด้านที่</th>
+                  <th>พาหนะ</th>
+                  <th>ระยะทาง/วัน</th>
+                  <th>น้ำมัน/วัน</th>
+                  <th>ระยะทาง/เดือน</th>
+                  <th>น้ำมัน/เดือน</th>
+                  <th>เลือก</th>
+                </tr>
+              </thead>
+              <tbody id="routeEditorTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer" style="justify-content: space-between;">
+          <button type="button" id="resetAllRoutesBtn" class="btn btn-danger btn-small">🔄 รีเซ็ตเป็นค่าเริ่มต้นทั้งหมด</button>
+          <button type="button" id="closeRouteEditorBtn" class="btn btn-secondary btn-small">ปิดหน้าต่าง</button>
         </div>
       </div>
     </div>
