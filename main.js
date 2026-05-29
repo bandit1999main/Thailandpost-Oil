@@ -1189,7 +1189,7 @@ function renderEmployeeTable() {
         <td>${parentIndex + 1}</td>
         <td style="font-weight: 700; color: var(--text-primary);">${item.name}</td>
         <td><span style="background: rgba(14, 165, 233, 0.1); color: var(--post-orange); padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">${item.position}</span></td>
-        <td>${item.salary.toLocaleString()} บาท</td>
+        <td>${item.salary.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท</td>
         <td style="text-align: center;">${item.workDays} วัน</td>
         <td style="font-weight: 700;">${allowance.toFixed(2)} บาท</td>
         <td style="color: ${tax > 0 ? 'var(--post-red)' : 'var(--text-secondary)'}; font-weight: ${tax > 0 ? '700' : '400'};">${tax.toFixed(2)} บาท</td>
