@@ -901,6 +901,7 @@ tr:hover td {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1rem;
+    table-layout: fixed;
   }
 
   .print-table th, 
