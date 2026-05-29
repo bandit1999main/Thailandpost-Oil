@@ -897,7 +897,8 @@ tr:hover td {
     font-size: 7.5pt !important;
     color: black !important;
     background: transparent !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
+    word-break: break-word !important;
   }
 
   .print-table th {
