@@ -2153,9 +2153,9 @@ function printReport() {
           <td style="text-align: left !important; font-size: 7.5pt; line-height: 1.3;">${row.routeDesc}</td>
           <td>${row.workDays} วัน</td>
           <td>${row.liters.toFixed(2)}</td>
-          <td>${row.fuelCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-          <td>${row.maintCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-          <td><strong>${row.sumTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></td>
+          <td>${row.fuelCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td>${row.maintCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td><strong>${row.sumTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></td>
           <td><span style="font-family: var(--font-title); font-style: italic; font-size: 8.5pt; color: #ccc; font-weight: 300;">${row.signature}</span></td>
           <td><span style="font-size: 7.5pt; color: #444;">${row.remarks}</span></td>
         </tr>
@@ -2198,9 +2198,9 @@ function printReport() {
       <div class="print-summary-section">
         <div class="summary-block">
           <p>จำนวนรายชื่อผู้รับเงินกลุ่มนี้: <strong>${list.length}</strong> ราย</p>
-          <p>รวมค่าน้ำมันเชื้อเพลิงกลุ่มนี้: <strong>${totalFuelCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> บาท</p>
-          <p>รวมค่าบำรุงรักษากลุ่มนี้: <strong>${totalMaintCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> บาท</p>
-          <p class="final-sum">ยอดเงินเบิกจ่ายรวมทั้งสิ้น (กลุ่มนี้): <strong>${grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> บาท</p>
+          <p>รวมค่าน้ำมันเชื้อเพลิงกลุ่มนี้: <strong>${totalFuelCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> บาท</p>
+          <p>รวมค่าบำรุงรักษากลุ่มนี้: <strong>${totalMaintCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> บาท</p>
+          <p class="final-sum">ยอดเงินเบิกจ่ายรวมทั้งสิ้น (กลุ่มนี้): <strong>${grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> บาท</p>
         </div>
       </div>
 
@@ -2287,9 +2287,9 @@ function printReport() {
           <td style="text-align: left !important; font-size: 7.5pt;">ตรวจสอบการนำจ่าย (ด้าน ${routesUsed.join(', ')})</td>
           <td>${inspectDays} วัน</td>
           <td>${liters.toFixed(2)}</td>
-          <td>${fuelCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-          <td>${inspectMaint.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-          <td><strong>${rowSum.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></td>
+          <td>${fuelCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td>${inspectMaint.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td><strong>${rowSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></td>
           <td><span style="font-family: var(--font-title); font-style: italic; font-size: 8.5pt; color: #ccc; font-weight: 300;">${sv.signature}</span></td>
           <td><span style="font-size: 7.5pt; color: #444;">${sv.remarks || ''}</span></td>
         </tr>
@@ -2320,9 +2320,9 @@ function printReport() {
           <td style="text-align: left !important; font-size: 7.5pt;">${m.type} (ด้าน ${m.route})</td>
           <td>${m.days} วัน</td>
           <td>${liters.toFixed(2)}</td>
-          <td>${fuelCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-          <td>${maint.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-          <td><strong>${rowSum.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></td>
+          <td>${fuelCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td>${maint.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+          <td><strong>${rowSum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></td>
           <td><span style="font-family: var(--font-title); font-style: italic; font-size: 8.5pt; color: #ccc; font-weight: 300;">${sv.signature}</span></td>
           <td><span style="font-size: 7.5pt; color: #444;">${sv.remarks || ''}</span></td>
         </tr>
@@ -2335,9 +2335,9 @@ function printReport() {
         <td colspan="4" style="text-align: right !important;">รวมยอดทั้งหมดของ ${sv.name}:</td>
         <td>${totalDays} วัน</td>
         <td>${totalLiters.toFixed(2)}</td>
-        <td>${totalFuel.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-        <td>${totalMaint.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-        <td style="border-bottom: 4px double #000 !important; font-size: 8.5pt;"><strong>${sumTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></td>
+        <td>${totalFuel.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td>${totalMaint.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="border-bottom: 4px double #000 !important; font-size: 8.5pt;"><strong>${sumTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></td>
         <td colspan="2"></td>
       </tr>
     `);
@@ -2378,9 +2378,9 @@ function printReport() {
       <div class="print-summary-section">
         <div class="summary-block">
           <p>จำนวนงานภารกิจย่อย: <strong>${rowIdx - 1}</strong> รายการ</p>
-          <p>รวมค่าน้ำมันของบุคคลนี้: <strong>${totalFuel.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> บาท</p>
-          <p>รวมค่าบำรุงรักษาของบุคคลนี้: <strong>${totalMaint.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> บาท</p>
-          <p class="final-sum">ยอดรวมสุทธิบุคคลนี้: <strong>${sumTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> บาท</p>
+          <p>รวมค่าน้ำมันของบุคคลนี้: <strong>${totalFuel.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> บาท</p>
+          <p>รวมค่าบำรุงรักษาของบุคคลนี้: <strong>${totalMaint.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> บาท</p>
+          <p class="final-sum">ยอดรวมสุทธิบุคคลนี้: <strong>${sumTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> บาท</p>
         </div>
       </div>
 
