@@ -301,8 +301,16 @@ document.addEventListener('DOMContentLoaded', () => {
     saveGlobalSetting('month', { value: parseInt(globalMonthSelect.value) || 5 });
   });
 
+  globalYearSelect.addEventListener('input', () => {
+    const val = parseInt(globalYearSelect.value);
+    if (val >= 2500 && val <= 3000) {
+      saveGlobalSetting('year', { value: val });
+    }
+  });
+
   globalYearSelect.addEventListener('change', () => {
-    saveGlobalSetting('year', { value: parseInt(globalYearSelect.value) || 2569 });
+    const val = parseInt(globalYearSelect.value) || 2569;
+    saveGlobalSetting('year', { value: val });
   });
 
   // Populate Route Editor Dropdown
